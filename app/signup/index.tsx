@@ -1,78 +1,105 @@
 import { ThemedText } from "@/components/ThemedText"
+import { Button, ButtonText } from "@/components/ui/button"
 import { FormControl, FormControlError, FormControlErrorIcon, FormControlErrorText, FormControlLabel, FormControlLabelText } from "@/components/ui/form-control"
 import { Heading } from "@/components/ui/heading"
 import { Input, InputField } from "@/components/ui/input"
-import { Link } from "expo-router"
+import { Link, useRouter } from "expo-router"
 import React from "react"
-import { SafeAreaView, ScrollView } from "react-native"
+import { SafeAreaView, ScrollView, View, Pressable } from "react-native"
+import { ChevronLeftIcon, Icon } from "@/components/ui/icon"
 
 export default function SignupScreen() {
-    const [emailValue, setEmailValue] = React.useState("")
-    const [pwdValue, setPwdValue] = React.useState("")
-    const [cpwdValue, setCPwdValue] = React.useState("")
+    const router = useRouter();
+
+    const [emailValue, setEmailValue] = React.useState("");
+    const [pwdValue, setPwdValue] = React.useState("");
+    const [cpwdValue, setCPwdValue] = React.useState("");
+
+    const handleSubmit = () => {
+        router.push('/home');
+    }
     return (
-        <SafeAreaView>
-            <ScrollView style={{ padding: 16 }}>
-                <Heading size={"3xl"}>
-                    Sign up and GoKitar
-                </Heading>
-                <FormControl>
-                    <FormControlLabel>
-                        <FormControlLabelText>Email</FormControlLabelText>
-                    </FormControlLabel>
-                    <Input className="my-1" size={"md"}>
-                        <InputField
-                            type="text"
-                            placeholder="email"
-                            value={emailValue}
-                            onChangeText={(text) => setEmailValue(text)}
-                        />
-                    </Input>
-                    <FormControlError>
-                        <FormControlErrorIcon />
-                        <FormControlErrorText>Email Invalid</FormControlErrorText>
-                    </FormControlError>
-                </FormControl>
+        <SafeAreaView className="flex-1 bg-white dark:bg-gray-900">
+            <View style={{ padding: 16 }}>
+                <Pressable onPress={() => router.push('/')} className="pt-4 items-start justify-start">
+                    <Icon as={ChevronLeftIcon} size={"md"}  className="text-gray-900 dark:text-gray-50 w-8 h-8" />
+                </Pressable>
+            </View>
+            <ScrollView className="flex-1 px-6" contentContainerStyle={{ flexGrow: 1 }}>
+                <View className="flex-1">
+                    <Heading size="xl" className="mt-4 mb-8">
+                        Create your account
+                    </Heading>
+                    
+                    <FormControl className="mb-4">
+                        <FormControlLabel>
+                            <FormControlLabelText className="text-sm">Email</FormControlLabelText>
+                        </FormControlLabel>
+                        <Input className="mt-1" size="md">
+                            <InputField
+                                type="text"
+                                placeholder="email"
+                                value={emailValue}
+                                onChangeText={(text) => setEmailValue(text)}
+                            />
+                        </Input>
+                        <FormControlError>
+                            <FormControlErrorIcon />
+                            <FormControlErrorText>Email Invalid</FormControlErrorText>
+                        </FormControlError>
+                    </FormControl>
 
-                <FormControl>
-                    <FormControlLabel>
-                        <FormControlLabelText>Password</FormControlLabelText>
-                    </FormControlLabel>
-                    <Input className="my-1" size={"md"}>
-                        <InputField
-                            type="password"
-                            placeholder="password"
-                            value={pwdValue}
-                            onChangeText={(text) => setPwdValue(text)}
-                        />
-                    </Input>
-                    <FormControlError>
-                        <FormControlErrorIcon />
-                        <FormControlErrorText>password doesn't meet criteria</FormControlErrorText>
-                    </FormControlError>
-                </FormControl>
+                    <FormControl className="mb-4">
+                        <FormControlLabel>
+                            <FormControlLabelText className="text-sm">Password</FormControlLabelText>
+                        </FormControlLabel>
+                        <Input className="mt-1" size="md">
+                            <InputField
+                                type="password"
+                                placeholder="password"
+                                value={pwdValue}
+                                onChangeText={(text) => setPwdValue(text)}
+                            />
+                        </Input>
+                        <FormControlError>
+                            <FormControlErrorIcon />
+                            <FormControlErrorText>password doesn't meet criteria</FormControlErrorText>
+                        </FormControlError>
+                    </FormControl>
 
-                <FormControl>
-                    <FormControlLabel>
-                        <FormControlLabelText>Confirm Password</FormControlLabelText>
-                    </FormControlLabel>
-                    <Input className="my-1" size={"md"}>
-                        <InputField
-                            type="password"
-                            placeholder="confirm password"
-                            value={cpwdValue}
-                            onChangeText={(text) => setCPwdValue(text)}
-                        />
-                    </Input>
-                    <FormControlError>
-                        <FormControlErrorIcon />
-                        <FormControlErrorText>password doesn't match</FormControlErrorText>
-                    </FormControlError>
-                </FormControl>
+                    <FormControl className="mb-6">
+                        <FormControlLabel>
+                            <FormControlLabelText className="text-sm">Confirm Password</FormControlLabelText>
+                        </FormControlLabel>
+                        <Input className="mt-1" size="md">
+                            <InputField
+                                type="password"
+                                placeholder="confirm password"
+                                value={cpwdValue}
+                                onChangeText={(text) => setCPwdValue(text)}
+                            />
+                        </Input>
+                        <FormControlError>
+                            <FormControlErrorIcon />
+                            <FormControlErrorText>password doesn't match</FormControlErrorText>
+                        </FormControlError>
+                    </FormControl>
 
-                <ThemedText>
-                    already a member of GoKitar? <Link href="/login"><ThemedText type="link">Login</ThemedText></Link>
-                </ThemedText>
+                    <ThemedText className="text-sm text-center">
+                        already a member of GoKitar? <Link href="/login"><ThemedText type="link">Login</ThemedText></Link>
+                    </ThemedText>
+                </View>
+
+                <View className="pb-6">
+                    <Button 
+                        size="md" 
+                        variant="solid" 
+                        onPress={handleSubmit} 
+                        style={{ paddingHorizontal: 16, minHeight: 46}}
+                    >
+                        <ButtonText>Sign up</ButtonText>
+                    </Button>
+                </View>
             </ScrollView>
         </SafeAreaView>
     )

@@ -8,6 +8,7 @@ import TabBarBackground from "@/components/ui/TabBarBackground";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { GlobeIcon, Icon } from "@/components/ui/icon"
+import Feather from '@expo/vector-icons/Feather';
 
 export default function TabLayout() {
 	const colorScheme = useColorScheme();
@@ -40,7 +41,6 @@ export default function TabLayout() {
 					tabBarIcon: ({ color }: any) => (
 						<IconSymbol
 							size={30}
-							style={{ marginBottom: 5 }}
 							name="house.fill"
 							color={color}
 						/>
@@ -52,11 +52,7 @@ export default function TabLayout() {
 				options={{
 					title: "",
 					tabBarIcon: ({ color }: any) => (
-						<Icon 
-							as={GlobeIcon} 
-							className="text-typography-500 m-2 w-30 h-28"
-							size={"xl"}
-						/>
+						<Feather name="globe" size={28} color={color} />
 					),
 				}}
 			/>
@@ -65,9 +61,10 @@ export default function TabLayout() {
 				options={{
 					title: "",
 					tabBarIcon: ({ color }: any) => (
-						<Icon 
-							as={GlobeIcon} 
-							className="text-typography-500 m-2 w-28 h-28"
+						<IconSymbol
+							size={30}
+							name="person.fill"
+							color={color}
 						/>
 					),
 				}}

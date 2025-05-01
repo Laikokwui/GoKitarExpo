@@ -13,7 +13,9 @@
   "dependencies": {
     "@expo/html-elements": "^0.4.2",
     "@expo/vector-icons": "^14.1.0",
+    "@gluestack-ui/avatar": "^0.1.18",
     "@gluestack-ui/button": "^1.0.14",
+    "@gluestack-ui/fab": "^0.1.28",
     "@gluestack-ui/form-control": "^0.1.19",
     "@gluestack-ui/icon": "^0.1.27",
     "@gluestack-ui/input": "^0.1.38",
@@ -30,9 +32,11 @@
     "expo-font": "~13.3.0",
     "expo-haptics": "~14.1.4",
     "expo-image": "~2.1.6",
+    "expo-linear-gradient": "^14.1.4",
     "expo-linking": "~7.1.4",
     "expo-router": "^5.0.3",
     "expo-splash-screen": "~0.30.7",
+    "expo-sqlite": "~15.2.9",
     "expo-status-bar": "~2.2.3",
     "expo-symbols": "~0.4.4",
     "expo-system-ui": "~5.0.6",
@@ -64,7 +68,25 @@
       "reactNativeDirectoryCheck": {
         "listUnknownPackages": false
       }
-    }
+    },
+    "plugins": [
+      [
+        "expo-sqlite",
+        {
+          "enableFTS": true,
+          "useSQLCipher": true,
+          "android": {
+            "enableFTS": false,
+            "useSQLCipher": false
+          },
+          "ios": {
+            "customBuildFlags": [
+              "-DSQLITE_ENABLE_DBSTAT_VTAB=1 -DSQLITE_ENABLE_SNAPSHOT=1"
+            ]
+          }
+        }
+      ]
+    ]
   },
   "private": true
 }

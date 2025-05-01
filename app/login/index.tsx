@@ -2,10 +2,11 @@ import { ThemedText } from "@/components/ThemedText"
 import { Button, ButtonText } from "@/components/ui/button"
 import { FormControl, FormControlError, FormControlErrorIcon, FormControlErrorText, FormControlHelper, FormControlHelperText, FormControlLabel, FormControlLabelText } from "@/components/ui/form-control"
 import { Heading } from "@/components/ui/heading"
+import { ChevronLeftIcon, Icon } from "@/components/ui/icon"
 import { Input, InputField } from "@/components/ui/input"
-import { Link,useRouter } from "expo-router"
+import { Link, useRouter } from "expo-router"
 import React from "react"
-import { SafeAreaView, ScrollView } from "react-native"
+import { SafeAreaView, ScrollView, View, Pressable } from "react-native"
 
 export default function LoginScreen() {
     const router = useRouter();
@@ -17,54 +18,69 @@ export default function LoginScreen() {
     }
 
     return (
-        <SafeAreaView>
-            <ScrollView style={{ padding: 16 }}>
-                <Heading size={"3xl"}>
-                    Login to GoKitar
-                </Heading>
-                <FormControl>
-                    <FormControlLabel>
-                        <FormControlLabelText>Email</FormControlLabelText>
-                    </FormControlLabel>
-                    <Input className="my-1" size={"md"}>
-                        <InputField
-                            type="text"
-                            placeholder="email"
-                            value={emailValue}
-                            onChangeText={(text) => setEmailValue(text)}
-                        />
-                    </Input>
-                    <FormControlError>
-                    <FormControlErrorIcon />
-                        <FormControlErrorText>Email Invalid</FormControlErrorText>
-                    </FormControlError>
-                </FormControl>
+        <SafeAreaView className="flex-1 bg-white dark:bg-gray-900">
+            <View style={{ padding: 16 }}>
+                <Pressable onPress={() => router.push('/')} className="pt-4 items-start justify-start">
+                    <Icon as={ChevronLeftIcon} size={"md"}  className="text-gray-900 dark:text-gray-50 w-8 h-8" />
+                </Pressable>
+            </View>
+            <ScrollView className="flex-1 px-6" contentContainerStyle={{ flexGrow: 1 }}>
+                <View className="flex-1">
+                    <Heading size="xl" className="mt-8 mb-8">
+                        Login to your account
+                    </Heading>
+                    
+                    <FormControl className="mb-4">
+                        <FormControlLabel>
+                            <FormControlLabelText className="text-sm">Email</FormControlLabelText>
+                        </FormControlLabel>
+                        <Input className="mt-1" size="md">
+                            <InputField
+                                type="text"
+                                placeholder="email"
+                                value={emailValue}
+                                onChangeText={(text) => setEmailValue(text)}
+                            />
+                        </Input>
+                        <FormControlError>
+                            <FormControlErrorIcon />
+                            <FormControlErrorText>Email Invalid</FormControlErrorText>
+                        </FormControlError>
+                    </FormControl>
 
-                <FormControl>
-                    <FormControlLabel>
-                        <FormControlLabelText>Password</FormControlLabelText>
-                    </FormControlLabel>
-                    <Input className="my-1" size={"md"}>
-                        <InputField
-                            type="password"
-                            placeholder="password"
-                            value={pwdValue}
-                            onChangeText={(text) => setPwdValue(text)}
-                        />
-                    </Input>
-                    <FormControlError>
-                    <FormControlErrorIcon />
-                        <FormControlErrorText>Incorrect password or email</FormControlErrorText>
-                    </FormControlError>
-                </FormControl>
+                    <FormControl className="mb-6">
+                        <FormControlLabel>
+                            <FormControlLabelText className="text-sm">Password</FormControlLabelText>
+                        </FormControlLabel>
+                        <Input className="mt-1" size="md">
+                            <InputField
+                                type="password"
+                                placeholder="password"
+                                value={pwdValue}
+                                onChangeText={(text) => setPwdValue(text)}
+                            />
+                        </Input>
+                        <FormControlError>
+                            <FormControlErrorIcon />
+                            <FormControlErrorText>Incorrect password or email</FormControlErrorText>
+                        </FormControlError>
+                    </FormControl>
 
-                <ThemedText>
-                    Dont have an account? <Link href="/signup"><ThemedText type="link">Sign Up</ThemedText></Link>
-                </ThemedText>
+                    <ThemedText className="text-sm text-center">
+                        Don't have an account? <Link href="/signup"><ThemedText type="link">Sign Up</ThemedText></Link>
+                    </ThemedText>
+                </View>
 
-                <Button size="md" variant="solid" onPress={handleSubmit} className="my-4">
-                    <ButtonText>Login</ButtonText>
-                </Button>
+                <View className="pb-6">
+                    <Button 
+                        size="md" 
+                        variant="solid" 
+                        onPress={handleSubmit}
+                        style={{ paddingHorizontal: 16, minHeight: 46}}
+                    >
+                        <ButtonText>Login</ButtonText>
+                    </Button>
+                </View>
             </ScrollView>
         </SafeAreaView>
     )
