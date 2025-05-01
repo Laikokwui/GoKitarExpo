@@ -1,33 +1,24 @@
 import { Image } from "expo-image";
 import { Platform, SafeAreaView, ScrollView, StyleSheet } from "react-native";
-
+import { Link, useRouter } from 'expo-router';
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { useRouter } from 'expo-router';
 import { Button, ButtonText } from "@/components/ui/button";
 
-export default function TabTwoScreen() {
+export default function GetStartedScreen() {
 	const router = useRouter();
-	const handleLogout = () => {
-        router.push('/');
-    }
 	return (
 		<SafeAreaView>
 			<ScrollView style={styles.container}>
 				<ThemedView style={styles.titleContainer}>
-					<ThemedText type="title">Account</ThemedText>
+					<ThemedText type="title">GoKitar get started here</ThemedText>
 				</ThemedView>
-				<ThemedText>
-					Edit Profile
-				</ThemedText>
-				<ThemedText>
-					Contact us
-				</ThemedText>
-				<ThemedText>
-					Term and Conditions
-				</ThemedText>
-				<Button onPress={handleLogout}>
-					<ButtonText>Logout</ButtonText>
+
+                <Button onPress={()=>router.push('/login')} className="mb-2">
+					<ButtonText>Login</ButtonText>
+				</Button>
+                <Button onPress={()=>router.push('/signup')}>
+					<ButtonText>Sign Up</ButtonText>
 				</Button>
 			</ScrollView>
 		</SafeAreaView>
@@ -35,11 +26,12 @@ export default function TabTwoScreen() {
 }
 
 const styles = StyleSheet.create({
-	container: {
-		padding: 16,
+	container: { 
+		padding: 16 
 	},
 	titleContainer: {
 		flexDirection: "row",
+		alignItems: "center",
 		gap: 8,
 	},
 });

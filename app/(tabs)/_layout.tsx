@@ -7,6 +7,7 @@ import { IconSymbol } from "@/components/ui/IconSymbol";
 import TabBarBackground from "@/components/ui/TabBarBackground";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { GlobeIcon, Icon } from "@/components/ui/icon"
 
 export default function TabLayout() {
 	const colorScheme = useColorScheme();
@@ -22,18 +23,24 @@ export default function TabLayout() {
 					ios: {
 						// Use a transparent background on iOS to show the blur effect
 						position: "absolute",
+						paddingTop:10,
+						height: 80, // Adjust the height to make the tab bar taller
 					},
-					default: {},
+					default: {
+						paddingTop:10,
+						height: 80, // Adjust the height for other platforms as well
+					},
 				}),
 			}}
 		>
 			<Tabs.Screen
-				name="index"
+				name="home"
 				options={{
-					title: "Home",
+					title: "",
 					tabBarIcon: ({ color }: any) => (
 						<IconSymbol
-							size={28}
+							size={30}
+							style={{ marginBottom: 5 }}
 							name="house.fill"
 							color={color}
 						/>
@@ -41,14 +48,26 @@ export default function TabLayout() {
 				}}
 			/>
 			<Tabs.Screen
+				name="community"
+				options={{
+					title: "",
+					tabBarIcon: ({ color }: any) => (
+						<Icon 
+							as={GlobeIcon} 
+							className="text-typography-500 m-2 w-30 h-28"
+							size={"xl"}
+						/>
+					),
+				}}
+			/>
+			<Tabs.Screen
 				name="account"
 				options={{
-					title: "Account",
+					title: "",
 					tabBarIcon: ({ color }: any) => (
-						<IconSymbol
-							size={28}
-							name="paperplane.fill"
-							color={color}
+						<Icon 
+							as={GlobeIcon} 
+							className="text-typography-500 m-2 w-28 h-28"
 						/>
 					),
 				}}
