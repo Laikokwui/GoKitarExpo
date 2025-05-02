@@ -1,14 +1,22 @@
 import { OnboardingSlider } from "@/components/OnboardingSlider";
 import { Button, ButtonText } from "@/components/ui/button";
+import { Center } from "@/components/ui/center";
+import { Spinner } from "@/components/ui/spinner";
 import auth from "@react-native-firebase/auth";
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from "react";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { Dimensions, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import colors from "tailwindcss/colors";
 
 export default function GetStartedScreen() {
+    const windowWidth = Dimensions.get('window').width;
+    const windowHeight = Dimensions.get('window').height;
+
     const [loading, setLoading] = useState(true);
+
     const router = useRouter();
+    
     useEffect(() => {
         const unsubscribe = auth().onAuthStateChanged(user => {
           console.log(user ? "Logged in" : "Logged out");
@@ -20,10 +28,14 @@ export default function GetStartedScreen() {
         });
         return unsubscribe;
     }, []);
+    
     if (loading) {
-        return <ActivityIndicator />;
+        return (
+            <Center style={{height: windowHeight, width: windowWidth}}>
+                <Spinner size="small" color={colors.green[500]} />
+            </Center>
+        );
     }
-
     
     return (
         <SafeAreaView style={styles.container}>

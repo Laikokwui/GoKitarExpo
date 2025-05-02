@@ -14,12 +14,6 @@ export default function CommunityScreen() {
                         <ThemedText type="title">Community</ThemedText>
                     </ThemedView>
 
-                    <ThemedText>
-                        Your Area
-                    </ThemedText>
-                    <ThemedText>
-                        Other Areas
-                    </ThemedText>
                 </ScrollView>
                 <Fab
                     size="md"
