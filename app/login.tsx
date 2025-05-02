@@ -39,15 +39,15 @@ export default function LoginScreen() {
             </View>
             <ScrollView className="flex-1 px-6" contentContainerStyle={{ flexGrow: 1 }}>
                 <View className="flex-1">
-                    <Heading size="xl" className="mt-8 mb-8">
+                    <Heading size="2xl" className="mt-8 mb-8">
                         Login to your account
                     </Heading>
                     
                     <FormControl className="mb-4">
                         <FormControlLabel>
-                            <FormControlLabelText className="text-sm">Email</FormControlLabelText>
+                            <FormControlLabelText className="text-xl">Email</FormControlLabelText>
                         </FormControlLabel>
-                        <Input className="mt-1" size="md">
+                        <Input className="mt-1 h-12" size="md">
                             <InputField
                                 type="text"
                                 placeholder="email"
@@ -63,9 +63,9 @@ export default function LoginScreen() {
 
                     <FormControl className="mb-6">
                         <FormControlLabel>
-                            <FormControlLabelText className="text-sm">Password</FormControlLabelText>
+                            <FormControlLabelText className="text-xl">Password</FormControlLabelText>
                         </FormControlLabel>
-                        <Input className="mt-1" size="md">
+                        <Input className="mt-1 h-12" size="md">
                             <InputField
                                 type="password"
                                 placeholder="password"

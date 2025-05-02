@@ -1,10 +1,11 @@
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { Box } from "@/components/ui/box";
-import { VStack } from "@/components/ui/vstack";
+import { HStack } from "@/components/ui/hstack";
+import { Text } from "@/components/ui/text";
 import auth from "@react-native-firebase/auth";
 import { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { Image, ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
@@ -16,8 +17,6 @@ export default function HomeScreen() {
 		
 		if (current_user) {
 			setUser(current_user);
-			
-			console.log(current_user);
 			setLoading(false);
 		} 
 	}, []);
@@ -30,12 +29,37 @@ export default function HomeScreen() {
 						<ThemedText type="title">Welcome! {user?.displayName || ""}</ThemedText>
 					</ThemedView>
 				</View>
-				<Box className="justify-center h-80">
-					<VStack space="md" reversed={false}>
-						<Box className="h-20 w-20 bg-primary-300" />
-						<Box className="h-20 w-20 bg-primary-400" />
-						<Box className="h-20 w-20 bg-primary-500" />
-					</VStack>
+
+				<Text size="2xl" style={{marginTop: 16}}>News & Insights</Text>
+				<Box style={{ marginTop: 2 }}>
+					<ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+						<HStack space="md" reversed={false}>
+							<View style={styles.imageBox}>
+								<Image
+									source={require("../../assets/images/insight1.jpg")}
+									style={{ width: "100%", height: "80%" }}
+									resizeMode="cover"
+								/>
+								<Text style={{  paddingHorizontal: 8, textAlign: "left", marginTop: 8 }}>Always recycle</Text>
+							</View>
+							<View style={styles.imageBox}>
+								<Image
+									source={require("../../assets/images/insight2.jpg")}
+									style={{ width: "100%", height: "80%" }}
+									resizeMode="cover"
+								/>
+								<Text style={{ paddingHorizontal: 8, textAlign: "left", marginTop: 8 }}>Work together to get the job done</Text>
+							</View>
+							<View style={styles.imageBox}>
+								<Image
+									source={require("../../assets/images/insight3.jpg")}
+									style={{ width: "100%", height: "80%" }}
+									resizeMode="cover"
+								/>
+								<Text style={{  paddingHorizontal: 8, textAlign: "left", marginTop: 8 }}>Love the earth</Text>
+							</View>
+						</HStack>
+					</ScrollView>
 				</Box>
 			</ScrollView>
 		</SafeAreaView>
@@ -54,5 +78,11 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		alignItems: "center",
 		gap: 8,
+	},
+	imageBox: {
+		width: 250,
+		height: 320,
+		borderRadius: 8,
+		backgroundColor: "#fff",
 	},
 });
