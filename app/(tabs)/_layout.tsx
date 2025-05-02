@@ -7,7 +7,6 @@ import { IconSymbol } from "@/components/ui/IconSymbol";
 import TabBarBackground from "@/components/ui/TabBarBackground";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { GlobeIcon, Icon } from "@/components/ui/icon"
 import Feather from '@expo/vector-icons/Feather';
 
 export default function TabLayout() {
@@ -22,14 +21,13 @@ export default function TabLayout() {
 				tabBarBackground: TabBarBackground,
 				tabBarStyle: Platform.select({
 					ios: {
-						// Use a transparent background on iOS to show the blur effect
 						position: "absolute",
 						paddingTop:10,
-						height: 80, // Adjust the height to make the tab bar taller
+						height: 80,
 					},
 					default: {
 						paddingTop:10,
-						height: 80, // Adjust the height for other platforms as well
+						height: 80,
 					},
 				}),
 			}}

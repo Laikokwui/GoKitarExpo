@@ -1,19 +1,15 @@
-import { Image } from "expo-image";
-import { Platform, SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
-
-import { HelloWave } from "@/components/HelloWave";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-
-import { Box } from "@/components/ui/box"
-import { VStack } from "@/components/ui/vstack"
 import { Avatar, AvatarBadge, AvatarFallbackText, AvatarImage } from "@/components/ui/avatar";
+import { Box } from "@/components/ui/box";
+import { VStack } from "@/components/ui/vstack";
+import { ScrollView, StyleSheet, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
 	const username = "Kok Wui"
 	return (
-		<SafeAreaView>
+		<SafeAreaView style={styles.safeArea}>
 			<ScrollView style={styles.container}>
 				<View>
 					<Avatar size="md">
@@ -42,7 +38,11 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
+	safeArea: {
+		flex: 1,
+	},
 	container: { 
+		flex: 1,
 		padding: 16 
 	},
 	titleContainer: {

@@ -1,19 +1,13 @@
-import { Image } from "expo-image";
-import { Platform, SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
-
-import { Collapsible } from "@/components/Collapsible";
-import { ExternalLink } from "@/components/ExternalLink";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { IconSymbol } from "@/components/ui/IconSymbol";
-import { Box } from "@/components/ui/box";
 import { Fab, FabIcon, FabLabel } from "@/components/ui/fab";
 import { AddIcon } from "@/components/ui/icon";
+import { ScrollView, StyleSheet, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function CommunityScreen() {
     return (
-        <SafeAreaView>
+        <SafeAreaView style={{ flex: 1 }}>
             <View>
                 <ScrollView style={styles.container}>
                     <ThemedView style={styles.titleContainer}>
@@ -38,6 +32,7 @@ export default function CommunityScreen() {
                     <FabIcon as={AddIcon} />
                     <FabLabel>Post</FabLabel>
                 </Fab>
+                
             </View>
         </SafeAreaView>
     );

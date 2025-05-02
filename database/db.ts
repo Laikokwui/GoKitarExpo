@@ -1,5 +1,8 @@
 import * as SQLite from 'expo-sqlite';
 
-const db = await SQLite.openDatabaseAsync('gokitar.db');
+const openDB = async() => {
+   const db = await SQLite.openDatabaseAsync('gokitar.db');
+   return db;
+}
 
-export default db;
+export default openDB;

@@ -1,12 +1,13 @@
 import { ThemedText } from "@/components/ThemedText"
 import { Button, ButtonText } from "@/components/ui/button"
-import { FormControl, FormControlError, FormControlErrorIcon, FormControlErrorText, FormControlHelper, FormControlHelperText, FormControlLabel, FormControlLabelText } from "@/components/ui/form-control"
+import { FormControl, FormControlError, FormControlErrorIcon, FormControlErrorText, FormControlLabel, FormControlLabelText } from "@/components/ui/form-control"
 import { Heading } from "@/components/ui/heading"
 import { ChevronLeftIcon, Icon } from "@/components/ui/icon"
 import { Input, InputField } from "@/components/ui/input"
 import { Link, useRouter } from "expo-router"
 import React from "react"
-import { SafeAreaView, ScrollView, View, Pressable } from "react-native"
+import { Pressable, ScrollView, View } from "react-native"
+import { SafeAreaView } from "react-native-safe-area-context"
 
 export default function LoginScreen() {
     const router = useRouter();

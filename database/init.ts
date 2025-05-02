@@ -1,15 +1,14 @@
-// init.js
-import db from "./db";
+import openDB from "./db";
 
-export const initDB = () => {
-	db.execAsync((tx) => {
-		tx.executeSql(
-			`CREATE TABLE IF NOT EXISTS posts (
+export const initDB = async () => {
+	const db = await openDB();
+	db.execAsync(
+		`CREATE TABLE IF NOT EXISTS posts (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         title TEXT NOT NULL,
         content TEXT,
+        image_uri TEXT,
         created_at TEXT
       );`
-		);
-	});
+	);
 };

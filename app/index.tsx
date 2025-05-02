@@ -1,7 +1,8 @@
-import { SafeAreaView, StyleSheet, View, Text } from "react-native";
-import { useRouter } from 'expo-router';
-import { Button, ButtonText } from "@/components/ui/button";
 import { OnboardingSlider } from "@/components/OnboardingSlider";
+import { Button, ButtonText } from "@/components/ui/button";
+import { useRouter } from 'expo-router';
+import { StyleSheet, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function GetStartedScreen() {
     const router = useRouter();
@@ -36,7 +37,6 @@ export default function GetStartedScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 24,
         backgroundColor: '#ffffff'
     },
     header: {
@@ -56,16 +56,15 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     buttonContainer: {
-        marginTop: 'auto',
-        gap: 16,
-        marginBottom: 16
+        padding: 24,
+        marginBottom: 32,
     },
     button: {
-        borderRadius: 12,
+        borderRadius: 6,
         overflow: 'hidden',
-        elevation: 2,
-        marginHorizontal: 16,
-        minHeight: 46
+        elevation: 0,
+        marginVertical: 8,
+        minHeight: 50
     },
     gradient: {
         width: '100%',

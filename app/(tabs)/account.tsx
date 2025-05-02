@@ -1,12 +1,12 @@
-import { Image } from "expo-image";
-import { Platform, SafeAreaView, ScrollView, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { useRouter } from 'expo-router';
 import { Button, ButtonText } from "@/components/ui/button";
+import { useRouter } from 'expo-router';
+import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function TabTwoScreen() {
+export default function AccountScreen() {
 	const router = useRouter();
 	const handleLogout = () => {
         router.push('/');

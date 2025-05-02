@@ -1,9 +1,10 @@
-import React, { useState, useRef } from 'react';
-import { View, FlatList, StyleSheet, Dimensions, ViewToken } from 'react-native';
 import { Image } from "expo-image";
+import React, { useRef, useState } from 'react';
+import { Dimensions, FlatList, StyleSheet, View, ViewToken } from 'react-native';
 import { ThemedText } from "./ThemedText";
 
-const { width, height } = Dimensions.get('window');
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 const slides = [
     {
@@ -95,19 +96,19 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     slide: {
-        width,
-        height: height * 0.7,
+        padding: 24,
+        width: windowWidth,
+        height: windowHeight * 0.7,
         justifyContent: 'center',
         alignItems: 'center',
     },
     image: {
-        width: width * 0.8,
-        height: width * 0.8,
+        width: windowWidth * 0.8,
+        height: windowWidth * 0.8,
         marginBottom: 20,
     },
     content: {
         alignItems: 'center',
-        padding: 20,
     },
     title: {
         marginBottom: 10,
