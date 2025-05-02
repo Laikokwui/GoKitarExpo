@@ -39,7 +39,7 @@ export default function EditProfileScreen() {
 
         if (current_user) {
             setUser(current_user);
-            setName(current_user?.uid || "");
+            setName(current_user?.displayName || "");
             setEmail(current_user?.email || "");
             setImageUri(current_user?.photoURL || "");
             console.log(current_user);
