@@ -1,11 +1,30 @@
 import { OnboardingSlider } from "@/components/OnboardingSlider";
 import { Button, ButtonText } from "@/components/ui/button";
+import auth from "@react-native-firebase/auth";
 import { useRouter } from 'expo-router';
-import { StyleSheet, View } from "react-native";
+import { useEffect, useState } from "react";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function GetStartedScreen() {
+    const [loading, setLoading] = useState(true);
     const router = useRouter();
+    useEffect(() => {
+        const unsubscribe = auth().onAuthStateChanged(user => {
+          console.log(user ? "Logged in" : "Logged out");
+
+          if (user) {
+            router.push('/home');
+          }
+          setLoading(false);
+        });
+        return unsubscribe;
+    }, []);
+    if (loading) {
+        return <ActivityIndicator />;
+    }
+
+    
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>

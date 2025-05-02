@@ -4,21 +4,32 @@ import { FormControl, FormControlError, FormControlErrorIcon, FormControlErrorTe
 import { Heading } from "@/components/ui/heading"
 import { ChevronLeftIcon, Icon } from "@/components/ui/icon"
 import { Input, InputField } from "@/components/ui/input"
+import auth from "@react-native-firebase/auth"
 import { Link, useRouter } from "expo-router"
 import React from "react"
 import { Pressable, ScrollView, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 
-export default function SignupScreen() {
+export default function LoginScreen() {
     const router = useRouter();
 
+    const [isInvalid, setIsInvalid] = React.useState(false);
     const [emailValue, setEmailValue] = React.useState("");
     const [pwdValue, setPwdValue] = React.useState("");
-    const [cpwdValue, setCPwdValue] = React.useState("");
 
-    const handleSubmit = () => {
-        router.push('/home');
+    const handleSubmit = async () => {
+        try {
+            const user = await auth().signInWithEmailAndPassword(emailValue, pwdValue);
+            console.log(user);
+        } catch (error: any) {
+            console.log(error)
+            alert('Sign in failed: ' + error.message);
+            return;
+        }
+       
+        router.replace('/home');
     }
+
     return (
         <SafeAreaView className="flex-1 bg-white dark:bg-gray-900">
             <View style={{ padding: 16 }}>
@@ -28,8 +39,8 @@ export default function SignupScreen() {
             </View>
             <ScrollView className="flex-1 px-6" contentContainerStyle={{ flexGrow: 1 }}>
                 <View className="flex-1">
-                    <Heading size="xl" className="mt-4 mb-8">
-                        Create your account
+                    <Heading size="xl" className="mt-8 mb-8">
+                        Login to your account
                     </Heading>
                     
                     <FormControl className="mb-4">
@@ -50,7 +61,7 @@ export default function SignupScreen() {
                         </FormControlError>
                     </FormControl>
 
-                    <FormControl className="mb-4">
+                    <FormControl className="mb-6">
                         <FormControlLabel>
                             <FormControlLabelText className="text-sm">Password</FormControlLabelText>
                         </FormControlLabel>
@@ -64,30 +75,12 @@ export default function SignupScreen() {
                         </Input>
                         <FormControlError>
                             <FormControlErrorIcon />
-                            <FormControlErrorText>password doesn't meet criteria</FormControlErrorText>
-                        </FormControlError>
-                    </FormControl>
-
-                    <FormControl className="mb-6">
-                        <FormControlLabel>
-                            <FormControlLabelText className="text-sm">Confirm Password</FormControlLabelText>
-                        </FormControlLabel>
-                        <Input className="mt-1" size="md">
-                            <InputField
-                                type="password"
-                                placeholder="confirm password"
-                                value={cpwdValue}
-                                onChangeText={(text) => setCPwdValue(text)}
-                            />
-                        </Input>
-                        <FormControlError>
-                            <FormControlErrorIcon />
-                            <FormControlErrorText>password doesn't match</FormControlErrorText>
+                            <FormControlErrorText>Incorrect password or email</FormControlErrorText>
                         </FormControlError>
                     </FormControl>
 
                     <ThemedText className="text-sm text-center">
-                        already a member of GoKitar? <Link href="/login"><ThemedText type="link">Login</ThemedText></Link>
+                        Don't have an account? <Link href="/signup"><ThemedText type="link">Sign Up</ThemedText></Link>
                     </ThemedText>
                 </View>
 
@@ -95,10 +88,10 @@ export default function SignupScreen() {
                     <Button 
                         size="md" 
                         variant="solid" 
-                        onPress={handleSubmit} 
+                        onPress={handleSubmit}
                         style={{ paddingHorizontal: 16, minHeight: 46}}
                     >
-                        <ButtonText>Sign up</ButtonText>
+                        <ButtonText>Login</ButtonText>
                     </Button>
                 </View>
             </ScrollView>

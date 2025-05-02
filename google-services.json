@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "939962718905",
+    "project_id": "gokitar-fbbfe",
+    "storage_bucket": "gokitar-fbbfe.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:939962718905:android:2949ee0b0f3f27b2b11968",
+        "android_client_info": {
+          "package_name": "com.anonymous.gokitarexpo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC1eafDMgHmqsmkglLmVBc1PSAsKmaVde4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
