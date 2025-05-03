@@ -19,20 +19,8 @@ export default function EditProfileScreen() {
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState<any>({});
     const [name, setName] = useState("");
-    const [phone, setPhone] = useState("");
     const [email, setEmail] = useState("");
     const [imageUri, setImageUri] = useState("");
-
-    const handleLogout = () => {
-        auth().signOut()
-            .then(() => {
-                console.log('User signed out successfully');
-                router.replace('/');
-            })
-            .catch((error) => {
-                console.error('Error signing out:', error);
-            });
-    };
 
     useEffect(() => {
         const current_user: any = auth().currentUser || {};

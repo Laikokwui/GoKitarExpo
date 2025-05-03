@@ -20,7 +20,14 @@ export const createPost = async (
 export const getPosts = async () => {
 	const db = await openDB();
 	return new Promise(async (resolve, reject) => {
-		await db.getAllAsync("SELECT * FROM posts ORDER BY created_at DESC");
+		await db.getAllAsync("SELECT * FROM posts ORDER BY created_at DESC").then((posts) => {
+			resolve(posts);
+			console.log("Fetched posts:", posts);
+		}).catch((error) => {		
+			console.error("Error fetching posts:", error);
+			reject(error);
+		}
+		);
 	});
 };
 

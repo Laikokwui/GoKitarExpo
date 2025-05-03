@@ -2,6 +2,7 @@ import { OnboardingSlider } from "@/components/OnboardingSlider";
 import { Button, ButtonText } from "@/components/ui/button";
 import { Center } from "@/components/ui/center";
 import { Spinner } from "@/components/ui/spinner";
+import { initDB } from "@/database/init";
 import auth from "@react-native-firebase/auth";
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from "react";
@@ -18,6 +19,7 @@ export default function GetStartedScreen() {
     const router = useRouter();
     
     useEffect(() => {
+        initDB();
         const unsubscribe = auth().onAuthStateChanged(user => {
           console.log(user ? "Logged in" : "Logged out");
 

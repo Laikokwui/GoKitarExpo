@@ -10,5 +10,12 @@ export const initDB = async () => {
         image_uri TEXT,
         created_at TEXT
       );`
-	);
+	).then(() => {
+    console.log("Posts table created");
+  }
+  ).catch((error) => {
+    console.error("Error creating posts table:", error);
+  }
+  );
+  console.log("Database initialized");
 };
