@@ -5,10 +5,11 @@ import { FormControl, FormControlError, FormControlErrorIcon, FormControlErrorTe
 import { ChevronLeftIcon, Icon } from "@/components/ui/icon";
 import { Input, InputField } from "@/components/ui/input";
 import { Pressable } from "@/components/ui/pressable";
+import { useAuth } from "@/context/authContext";
 import { createPost } from "@/database/postService";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { Image, ScrollView, StyleSheet, View } from "react-native";
 import { launchImageLibrary } from 'react-native-image-picker';
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -21,13 +22,18 @@ export default function CreatePostScreen() {
     const [postContent, setPostContent] = useState("");
     const [postImageUri, setPostImageUri] = useState("");
     const [postImageData, setPostImageData] = useState("");
+    
+    const { user }: any = useAuth();
 
     const router = useRouter();
     
     const handleCreatePost = () => {
         // Handle post creation logic here
-        createPost(postTitle, postContent, postImageUri).then(() => {
+        console.log("Creating post with data:", user.uid);
+        createPost(postTitle, postContent, postImageUri, user.uid).then(() => {
+
             console.log("Post created successfully");
+            router.push('/community');
         }).catch((error) => {
             console.error("Error creating post:", error);
         });
@@ -59,13 +65,50 @@ export default function CreatePostScreen() {
                         <ThemedText type="title">Create Post</ThemedText>
                     </ThemedView>
 
-                    {postImageUri !== "" ?
-                        <Image
-                            source={{uri: postImageUri}}
-                            style={styles.image}
-                            resizeMode="cover"
-                        />: <></>
-                    }
+                    {postImageUri !== "" ? (
+                        <View style={{ position: "relative", marginBottom: 16, width: 200 }}>
+                            <Image
+                                source={{ uri: postImageUri }}
+                                style={styles.image}
+                                resizeMode="cover"
+                            />
+                            <Pressable
+                                onPress={() => {
+                                    setPostImageUri("");
+                                    setPostImageData("");
+                                }}
+                                style={{
+                                    position: "absolute",
+                                    top: -5,
+                                    right: -15,
+                                    backgroundColor: "lightgrey",
+                                    borderRadius: 10,
+                                    width: 26,
+                                    height: 26,
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                }}
+                            >
+                                <ThemedText type="default" style={{ color: "grey", fontWeight: "bold" }}>X</ThemedText>
+                            </Pressable>
+                        </View>
+                    ) : (
+                        <Pressable
+                            onPress={() => handleUploadImage()}
+                            className="bg-gray-200 rounded-lg p-4 mb-4"
+                            style={{
+                                borderWidth: 1,
+                                borderColor: "lightgrey",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                width: 200,
+                                height: 120,
+                                borderRadius: 8,
+                            }}
+                        >
+                            <ThemedText type="default" style={{color: "grey"}}>Upload post thumbnail</ThemedText>
+                        </Pressable>
+                    )}
 
                     <FormControl className="mb-4">
                         <FormControlLabel>
@@ -123,6 +166,7 @@ const styles = StyleSheet.create({
     titleContainer: {
         flexDirection: "row",
         gap: 8,
+        marginBottom: 16,
     },
     listButton: {
         borderRadius: 6,
@@ -136,4 +180,10 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '600'
     },
+    image: {
+        width: 200,
+        height: 150,
+        borderRadius: 8,
+        marginVertical: 8,
+    }
 });

@@ -4,6 +4,7 @@ import { FormControl, FormControlError, FormControlErrorIcon, FormControlErrorTe
 import { Heading } from "@/components/ui/heading"
 import { ChevronLeftIcon, Icon } from "@/components/ui/icon"
 import { Input, InputField } from "@/components/ui/input"
+import { useAuth } from "@/context/authContext"
 import auth from "@react-native-firebase/auth"
 import { Link, useRouter } from "expo-router"
 import React from "react"
@@ -13,6 +14,8 @@ import { SafeAreaView } from "react-native-safe-area-context"
 export default function LoginScreen() {
     const router = useRouter();
 
+    const { login } = useAuth();
+
     const [isInvalid, setIsInvalid] = React.useState(false);
     const [emailValue, setEmailValue] = React.useState("");
     const [pwdValue, setPwdValue] = React.useState("");
@@ -20,14 +23,17 @@ export default function LoginScreen() {
     const handleSubmit = async () => {
         try {
             const user = await auth().signInWithEmailAndPassword(emailValue, pwdValue);
-            console.log(user);
+            if (user) {
+                login(user);
+
+            }
         } catch (error: any) {
             console.log(error)
             alert('Sign in failed: ' + error.message);
             return;
         }
        
-        router.replace('/home');
+        router.push('/home');
     }
 
     return (

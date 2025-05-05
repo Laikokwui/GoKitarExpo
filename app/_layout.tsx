@@ -1,4 +1,5 @@
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
+import { AuthProvider } from "@/context/authContext";
 import { initDB } from "@/database/init";
 import "@/global.css";
 import { useColorScheme } from "@/hooks/useColorScheme";
@@ -25,6 +26,7 @@ export default function RootLayout() {
 	}
 
 	return (
+		<AuthProvider>
 		<SafeAreaProvider>
 			<GluestackUIProvider mode="light">
 				<ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
@@ -41,5 +43,6 @@ export default function RootLayout() {
 				</ThemeProvider>
 			</GluestackUIProvider>
 		</SafeAreaProvider>
+		</AuthProvider>
 	);
 }

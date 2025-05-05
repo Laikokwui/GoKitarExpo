@@ -5,6 +5,7 @@ import { Box } from "@/components/ui/box";
 import { Button, ButtonText } from "@/components/ui/button";
 import { ChevronLeftIcon, Icon } from "@/components/ui/icon";
 import { Pressable } from "@/components/ui/pressable";
+import { useAuth } from "@/context/authContext";
 import auth from "@react-native-firebase/auth";
 import storage from '@react-native-firebase/storage';
 import * as ImagePicker from 'expo-image-picker';
@@ -22,6 +23,8 @@ export default function EditProfileScreen() {
     const [email, setEmail] = useState("");
     const [imageUri, setImageUri] = useState("");
 
+    const { updateUser } = useAuth();
+
     useEffect(() => {
         const current_user: any = auth().currentUser || {};
 
@@ -30,7 +33,6 @@ export default function EditProfileScreen() {
             setName(current_user?.displayName || "");
             setEmail(current_user?.email || "");
             setImageUri(current_user?.photoURL || "");
-            console.log(current_user);
         } else {
             router.replace('/');
         }
@@ -84,8 +86,9 @@ export default function EditProfileScreen() {
         try {
             const user = auth().currentUser;
             if (user) {
-                user.updateProfile({displayName: name, photoURL: imageUri});
+                user.updateProfile({displayName: name, photoURL: imageUri}).then((user) => {updateUser(user);});
                 user.updateEmail(email);
+                
                 console.log("Profile updated successfully");
             }
         } catch (error) {

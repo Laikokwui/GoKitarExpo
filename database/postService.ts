@@ -4,16 +4,15 @@ import openDB from "./db";
 export const createPost = async (
 	title: string,
 	content: string,
-	imageUri: string
+	imageUri: string,
+	userId: string
 ) => {
 	const db = await openDB();
 	const createdAt = new Date().toISOString();
-	return new Promise(async (resolve, reject) => {
-		await db.runAsync(
-			`INSERT INTO posts (title, content, image_uri, created_at) VALUES (?, ?, ?, ?)`,
-			[title, content, imageUri, createdAt]
-		);
-	});
+	await db.runAsync(
+		`INSERT INTO posts (title, content, image_uri, userid, created_at) VALUES (?, ?, ?, ?,?)`,
+		[title, content, imageUri, userId, createdAt]
+	);
 };
 
 // READ ALL

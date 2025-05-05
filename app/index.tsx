@@ -2,9 +2,9 @@ import { OnboardingSlider } from "@/components/OnboardingSlider";
 import { Button, ButtonText } from "@/components/ui/button";
 import { Center } from "@/components/ui/center";
 import { Spinner } from "@/components/ui/spinner";
+import { useAuth } from "@/context/authContext";
 import { initDB } from "@/database/init";
-import auth from "@react-native-firebase/auth";
-import { useRouter } from 'expo-router';
+import { Redirect, useRouter } from 'expo-router';
 import { useEffect, useState } from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -13,28 +13,25 @@ import colors from "tailwindcss/colors";
 export default function GetStartedScreen() {
     const windowWidth = Dimensions.get('window').width;
     const windowHeight = Dimensions.get('window').height;
-
+    
+    const { user } = useAuth();
     const [loading, setLoading] = useState(true);
 
     const router = useRouter();
     
     useEffect(() => {
         initDB();
-        const unsubscribe = auth().onAuthStateChanged(user => {
-          console.log(user ? "Logged in" : "Logged out");
-
-          if (user) {
-            router.push('/home');
-          }
-          setLoading(false);
-        });
-        return unsubscribe;
+        setLoading(false);
     }, []);
+
+    if (user) {
+        return <Redirect href="/home" />;
+    }
     
     if (loading) {
         return (
             <Center style={{height: windowHeight, width: windowWidth}}>
-                <Spinner size="small" color={colors.green[500]} />
+                <Spinner size="large" color={colors.green[500]} />
             </Center>
         );
     }

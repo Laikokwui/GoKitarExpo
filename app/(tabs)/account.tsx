@@ -7,6 +7,7 @@ import { Box } from "@/components/ui/box";
 import { Pressable } from "@/components/ui/pressable";
 import { SkeletonText } from "@/components/ui/skeleton";
 import { Text } from "@/components/ui/text";
+import { useAuth } from "@/context/authContext";
 import auth from "@react-native-firebase/auth";
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from "react";
@@ -16,12 +17,16 @@ export default function AccountScreen() {
 	const router = useRouter();
 
 	const [loading, setLoading] = useState(true);
-	const [user, setUser] = useState<any>({});
+	
+	const { user }: any = useAuth();
+
+	const { logout } = useAuth();
 	
 	const handleLogout = () => {
 		auth().signOut()
 			.then(() => {
 				console.log('User signed out successfully');
+				logout();
 				router.replace('/');
 			})
 			.catch((error) => {
@@ -33,10 +38,9 @@ export default function AccountScreen() {
 		const current_user = auth().currentUser || {};
 		
 		if (current_user) {
-			setUser(current_user);
 			setLoading(false);
 		} 
-	}, []);
+	}, [user]);
 
 	return (
 		<SafeAreaView>

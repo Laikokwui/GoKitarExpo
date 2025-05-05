@@ -8,6 +8,7 @@ export const initDB = async () => {
         title TEXT NOT NULL,
         content TEXT,
         image_uri TEXT,
+        userid TEXT,
         created_at TEXT
       );`
 	).then(() => {
