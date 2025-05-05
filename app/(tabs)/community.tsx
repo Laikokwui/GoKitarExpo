@@ -16,10 +16,10 @@ export default function CommunityScreen() {
         // Fetch community posts or any other data if needed
         getPosts().then((posts) => {
             console.log("Fetched posts:", posts);
-
+            setPosts(posts);
         }).catch((error) => {
             console.error("Error fetching posts:", error);
-        }   );
+        });
     }, []);
     
     return (
