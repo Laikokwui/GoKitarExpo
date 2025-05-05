@@ -43,6 +43,7 @@ export default function CommunityScreen() {
                                 postContent={item.content}
                                 postImageUri={item.image_uri}
                                 showEdit={item.userid === user?.uid}
+                                
                             />
                         )}
                     />
@@ -54,7 +55,7 @@ export default function CommunityScreen() {
                 isHovered={false}
                 isDisabled={false}
                 isPressed={false}
-                onPress={() => router.push('/createPost')}
+                onPress={() => router.push('/post/create')}
                 className={"position-fixed bottom-5 right-5"}
             >
                 <FabIcon as={AddIcon} />

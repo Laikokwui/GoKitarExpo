@@ -22,6 +22,13 @@ export const getPosts = async () => {
 	return posts;
 };
 
+// READ ALL
+export const getPostById = async (id: any) => {
+	const db = await openDB();
+	const post = await db.getFirstAsync("SELECT * FROM posts WHERE id = ?", [id]);
+	return post;
+};
+
 // UPDATE
 export const updatePost = async (
 	id: number,

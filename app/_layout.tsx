@@ -36,7 +36,8 @@ export default function RootLayout() {
 						<Stack.Screen name="login" options={{ headerShown: false }}/>
 						<Stack.Screen name="signup" options={{ headerShown: false }}/>
 						<Stack.Screen name="editProfile" options={{ headerShown: false }}/>
-						<Stack.Screen name="createPost" options={{ headerShown: false }}/>
+						<Stack.Screen name="post/create" options={{ headerShown: false }}/>
+						<Stack.Screen name="post/details/[id]" options={{ headerShown: false }}/>
 						<Stack.Screen name="+not-found" options={{ headerShown: false }}/>
 					</Stack>
 					<StatusBar style="auto" />

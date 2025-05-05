@@ -1,5 +1,7 @@
 import { Text } from "@/components/ui/text";
-import { Dimensions, Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import { useRouter } from "expo-router";
+import { Dimensions, Image, StyleSheet, View } from "react-native";
+import { Pressable } from "./ui/pressable";
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -7,8 +9,9 @@ const windowHeight = Dimensions.get('window').height;
 const postCard = (props: any) => {
     const { postID, postTitle, postContent, postImageUri, showEdit } = props;
 
+    const router = useRouter();
     return (
-        <View style={styles.cardContainer}>
+        <Pressable style={styles.cardContainer} onPress={() => router.push({ pathname: '/post/details/[id]', params:{ id: postID }})}>
             { postImageUri === '' || postImageUri == null ? 
                 <></>:
                 <Image
@@ -24,11 +27,7 @@ const postCard = (props: any) => {
                     {postContent}
                 </Text>
             </View>
-
-            { showEdit ?<TouchableOpacity style={styles.editButton}>
-                <Text style={styles.editButtonText}>Edit</Text>
-            </TouchableOpacity>: <></>}
-        </View>
+        </Pressable>
     )
 }
 
@@ -77,19 +76,6 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         textAlign: 'left',
     },
-    editButton: {
-        backgroundColor: '#007BFF',
-        borderRadius: 8,
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-        marginTop: 15,
-    },
-    editButtonText: {
-        color: '#fff',
-        fontWeight: 'bold',
-        textAlign: 'center',
-        fontSize: 16,
-    }
 });
 
 export default postCard;
