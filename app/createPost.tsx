@@ -9,24 +9,42 @@ import { createPost } from "@/database/postService";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
+import { launchImageLibrary } from 'react-native-image-picker';
 import { SafeAreaView } from "react-native-safe-area-context";
+
+var RNFS = require('react-native-fs');
 
 export default function CreatePostScreen() {
     const [loading, setLoading] = useState(true);
 
     const [postTitle, setPostTitle] = useState("");
     const [postContent, setPostContent] = useState("");
+    const [postImageUri, setPostImageUri] = useState("");
+    const [postImageData, setPostImageData] = useState("");
 
     const router = useRouter();
     
     const handleCreatePost = () => {
         // Handle post creation logic here
-        createPost(postTitle, postContent, "").then(() => {
+        createPost(postTitle, postContent, postImageUri).then(() => {
             console.log("Post created successfully");
         }).catch((error) => {
             console.error("Error creating post:", error);
         });
     };
+
+    const handleUploadImage = () => {
+        launchImageLibrary({mediaType: 'photo'}, async (response) => {
+            if (response.assets && response.assets.length > 0) {
+                const image = response.assets[0];
+                const filePath = image.uri?.replace('file://', '');
+                const fileData = await RNFS.readFile(filePath, 'base64');
+                setPostImageData(fileData);
+                const imageUri = `data:image/jpeg;base64,${fileData}`;
+                setPostImageUri(imageUri);
+            }
+        });
+    }
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -40,7 +58,15 @@ export default function CreatePostScreen() {
                     <ThemedView style={styles.titleContainer}>
                         <ThemedText type="title">Create Post</ThemedText>
                     </ThemedView>
-                    
+
+                    {postImageUri !== "" ?
+                        <Image
+                            source={{uri: postImageUri}}
+                            style={styles.image}
+                            resizeMode="cover"
+                        />: <></>
+                    }
+
                     <FormControl className="mb-4">
                         <FormControlLabel>
                             <FormControlLabelText className="text-xl">Post</FormControlLabelText>
