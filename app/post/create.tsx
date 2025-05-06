@@ -13,7 +13,7 @@ import { Image, ScrollView, StyleSheet, View } from "react-native";
 import { launchImageLibrary } from 'react-native-image-picker';
 import { SafeAreaView } from "react-native-safe-area-context";
 
-var RNFS = require('react-native-fs');
+const RNFS = require('react-native-fs');
 
 export default function CreatePostScreen() {
     const [loading, setLoading] = useState(true);
@@ -111,7 +111,7 @@ export default function CreatePostScreen() {
 
                 <FormControl className="mb-4">
                     <FormControlLabel>
-                        <FormControlLabelText className="text-xl">Post</FormControlLabelText>
+                        <FormControlLabelText className="text-xl">Title</FormControlLabelText>
                     </FormControlLabel>
                     <Input className="mt-1 h-12" size="md">
                         <InputField

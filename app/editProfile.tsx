@@ -7,9 +7,6 @@ import { ChevronLeftIcon, Icon } from "@/components/ui/icon";
 import { Pressable } from "@/components/ui/pressable";
 import { useAuth } from "@/context/authContext";
 import auth from "@react-native-firebase/auth";
-import storage from '@react-native-firebase/storage';
-import * as ImagePicker from 'expo-image-picker';
-import * as MediaLibrary from 'expo-media-library';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, TextInput, View } from "react-native";
@@ -17,7 +14,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function EditProfileScreen() {
     const router = useRouter();
-    const [loading, setLoading] = useState(true);
+
     const [user, setUser] = useState<any>({});
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -37,50 +34,6 @@ export default function EditProfileScreen() {
             router.replace('/');
         }
     }, []);
-
-    const pickAndUploadImage = async () => {
-        try {
-          const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-          const mediaPerm = await MediaLibrary.requestPermissionsAsync();
-      
-          if (!permissionResult.granted || !mediaPerm.granted) {
-            alert("Permission to access media library is required!");
-            return;
-          }
-      
-          const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [1, 1],
-            quality: 0.7,
-          });
-      
-          if (result.canceled) return;
-      
-          const imageUri = result.assets[0].uri;
-          console.log("Original URI:", imageUri);
-      
-          // Convert to file:// path
-          const asset = await MediaLibrary.createAssetAsync(imageUri);
-          const fileUri = asset.uri;
-          console.log("Converted fileUri:", fileUri);
-      
-          const filename = `test/test-image.jpg`;
-          await storage().ref(filename).putFile(fileUri);
-      
-          const downloadUrl = await storage().ref(filename).getDownloadURL();
-          console.log("Download URL:", downloadUrl);
-      
-          const currentUser = auth().currentUser;
-          if (currentUser) {
-            await currentUser.updateProfile({ photoURL: downloadUrl });
-            alert("Profile picture updated!");
-          }
-        } catch (error) {
-          console.error("Upload error:", error);
-          alert("Upload failed");
-        }
-    };   
 
     const handleUpdateProfile = async () => {
         try {
@@ -103,7 +56,7 @@ export default function EditProfileScreen() {
         <SafeAreaView>
             <ScrollView style={styles.container}>
                 <View style={{ marginBottom: 16 }}>
-                    <Pressable onPress={() => router.push('/account')} className="pt-4">
+                    <Pressable onPress={() => router.back()} className="pt-4">
                         <Icon as={ChevronLeftIcon} size={"md"}  className="text-gray-900 dark:text-gray-50 w-10 h-10" />
                     </Pressable>
                 </View>
@@ -119,7 +72,7 @@ export default function EditProfileScreen() {
 								}}
 							/>
 						</Avatar>
-                        <Pressable onPress={() => pickAndUploadImage()}>
+                        <Pressable>
                             <ThemedText type="link">Change Profile Picture</ThemedText>
                         </Pressable>
 					</View>

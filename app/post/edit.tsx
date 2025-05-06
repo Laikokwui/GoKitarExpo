@@ -8,20 +8,40 @@ import { Pressable } from "@/components/ui/pressable";
 import { deletePost, updatePost } from "@/database/postService";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { Alert, Image, ScrollView, StyleSheet, View } from "react-native";
+import { launchImageLibrary } from "react-native-image-picker";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function ModifyPostScreen() {
-    const [loading, setLoading] = useState(true);
+const RNFS = require('react-native-fs');
 
+export default function ModifyPostScreen() {
     const [postID, setPostID] = useState<number>(0);
     const [postTitle, setPostTitle] = useState<string>("");
     const [postContent, setPostContent] = useState<string>("");
+    const [postImageUri, setPostImageUri] = useState<string>("");
+    const [postImageData, setPostImageData] = useState<string>("");
 
     const router = useRouter();
+
+    const handleUploadImage = () => {
+        launchImageLibrary({mediaType: 'photo'}, async (response) => {
+            if (response.assets && response.assets.length > 0) {
+                const image = response.assets[0];
+                const filePath = image.uri?.replace('file://', '');
+                const fileData = await RNFS.readFile(filePath, 'base64');
+                setPostImageData(fileData);
+                const imageUri = `data:image/jpeg;base64,${fileData}`;
+                setPostImageUri(imageUri);
+            }
+        });
+    }
     
     const handleUpdatePost = () => {
-        // Handle post creation logic here
+        if (postTitle.trim() === "" || postContent.trim() === "") {
+            Alert.alert("Post title and content cannot be empty");
+            return;
+        }
+        
         updatePost(postID, postTitle, postContent, "").then(() => {
             console.log("Post created successfully");
         }).catch((error) => {
@@ -43,17 +63,62 @@ export default function ModifyPostScreen() {
             <View>
                 <ScrollView style={styles.container}>
                 <View style={{ marginBottom: 16 }}>
-                    <Pressable onPress={() => router.push('/community')} className="pt-4">
+                    <Pressable onPress={() => router.back()} className="pt-4">
                         <Icon as={ChevronLeftIcon} size={"md"}  className="text-gray-900 dark:text-gray-50 w-10 h-10" />
                     </Pressable>
                 </View>
                     <ThemedView style={styles.titleContainer}>
                         <ThemedText type="title">Edit Post</ThemedText>
                     </ThemedView>
+
+                    {postImageUri !== "" ? (
+                        <View style={{ position: "relative", marginBottom: 16, width: 200 }}>
+                            <Image
+                                source={{ uri: postImageUri }}
+                                style={styles.image}
+                                resizeMode="cover"
+                            />
+                            <Pressable
+                                onPress={() => {
+                                    setPostImageUri("");
+                                    setPostImageData("");
+                                }}
+                                style={{
+                                    position: "absolute",
+                                    top: -5,
+                                    right: -15,
+                                    backgroundColor: "lightgrey",
+                                    borderRadius: 10,
+                                    width: 26,
+                                    height: 26,
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                }}
+                            >
+                                <ThemedText type="default" style={{ color: "grey", fontWeight: "bold" }}>X</ThemedText>
+                            </Pressable>
+                        </View>
+                    ) : (
+                        <Pressable
+                            onPress={() => handleUploadImage()}
+                            className="bg-gray-200 rounded-lg p-4 mb-4"
+                            style={{
+                                borderWidth: 1,
+                                borderColor: "lightgrey",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                width: 200,
+                                height: 120,
+                                borderRadius: 8,
+                            }}
+                        >
+                            <ThemedText type="default" style={{color: "grey"}}>Upload post thumbnail</ThemedText>
+                        </Pressable>
+                    )}
                     
                     <FormControl className="mb-4">
                         <FormControlLabel>
-                            <FormControlLabelText className="text-xl">Post</FormControlLabelText>
+                            <FormControlLabelText className="text-xl">Title</FormControlLabelText>
                         </FormControlLabel>
                         <Input className="mt-1 h-12" size="md">
                             <InputField
@@ -135,4 +200,10 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '600'
     },
+    image: {
+        width: 200,
+        height: 150,
+        borderRadius: 8,
+        marginVertical: 8,
+    }
 });
