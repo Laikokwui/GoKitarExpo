@@ -4,12 +4,10 @@ import { Box } from "@/components/ui/box";
 import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
 import { useAuth } from "@/context/authContext";
-import { useState } from "react";
 import { Image, ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
-	const [loading, setLoading] = useState(true);
 	const { user }: any = useAuth();
 	
 	return (

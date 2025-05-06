@@ -16,7 +16,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function AccountScreen() {
 	const router = useRouter();
 
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useState<boolean>(true);
 	
 	const { user }: any = useAuth();
 

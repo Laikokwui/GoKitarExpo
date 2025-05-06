@@ -18,7 +18,7 @@ export default function PostDetailScreen() {
 	const { user }: any = useAuth();
 
 	const [post, setPost] = useState<any>({});
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useState<boolean>(true);
 
 	useEffect(() => {
 		getPostById(id)

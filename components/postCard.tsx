@@ -1,13 +1,10 @@
 import { Text } from "@/components/ui/text";
 import { useRouter } from "expo-router";
-import { Dimensions, Image, StyleSheet, View } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 import { Pressable } from "./ui/pressable";
 
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
-
 const postCard = (props: any) => {
-    const { postID, postTitle, postContent, postImageUri, showEdit } = props;
+    const { postID, postTitle, postContent, postImageUri } = props;
 
     const router = useRouter();
     return (

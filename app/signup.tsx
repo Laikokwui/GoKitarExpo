@@ -15,9 +15,9 @@ import { SafeAreaView } from "react-native-safe-area-context"
 export default function SignupScreen() {
     const router = useRouter();
 
-    const [emailValue, setEmailValue] = React.useState("");
-    const [pwdValue, setPwdValue] = React.useState("");
-    const [cpwdValue, setCPwdValue] = React.useState("");
+    const [emailValue, setEmailValue] = React.useState<string>("");
+    const [pwdValue, setPwdValue] = React.useState<string>("");
+    const [cpwdValue, setCPwdValue] = React.useState<string>("");
 
     const { login } = useAuth();
 

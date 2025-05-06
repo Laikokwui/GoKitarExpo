@@ -13,7 +13,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function CommunityScreen() {
     const router = useRouter();
-    const [posts, setPosts] = useState<any[]>([]);
+
+    const [posts, setPosts] = useState<any>([]);
 
     const { user }: any = useAuth();
 
@@ -42,8 +43,6 @@ export default function CommunityScreen() {
                                 postTitle={item.title}
                                 postContent={item.content}
                                 postImageUri={item.image_uri}
-                                showEdit={item.userid === user?.uid}
-                                
                             />
                         )}
                     />

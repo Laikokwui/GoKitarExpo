@@ -17,12 +17,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 const RNFS = require('react-native-fs');
 
 export default function CreatePostScreen() {
-    const [loading, setLoading] = useState(true);
-
-    const [postTitle, setPostTitle] = useState("");
-    const [postContent, setPostContent] = useState("");
-    const [postImageUri, setPostImageUri] = useState("");
-    const [postImageData, setPostImageData] = useState("");
+    const [postTitle, setPostTitle] = useState<string>("");
+    const [postContent, setPostContent] = useState<string>("");
+    const [postImageUri, setPostImageUri] = useState<string>("");
+    const [postImageData, setPostImageData] = useState<string>("");
     
     const { user }: any = useAuth();
 

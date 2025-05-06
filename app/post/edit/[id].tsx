@@ -18,7 +18,7 @@ const RNFS = require('react-native-fs');
 
 export default function ModifyPostScreen() {
     const { id } = useLocalSearchParams();
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState<boolean>(true);
     const [postID, setPostID] = useState<number>(0);
     const [postTitle, setPostTitle] = useState<string>("");
     const [postContent, setPostContent] = useState<string>("");

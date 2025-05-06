@@ -15,7 +15,7 @@ export default function GetStartedScreen() {
     const windowHeight = Dimensions.get('window').height;
     
     const { user } = useAuth();
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState<boolean>(true);
 
     const router = useRouter();
     

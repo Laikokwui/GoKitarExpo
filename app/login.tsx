@@ -16,9 +16,8 @@ export default function LoginScreen() {
 
     const { login } = useAuth();
 
-    const [isInvalid, setIsInvalid] = React.useState(false);
-    const [emailValue, setEmailValue] = React.useState("");
-    const [pwdValue, setPwdValue] = React.useState("");
+    const [emailValue, setEmailValue] = React.useState<string>("");
+    const [pwdValue, setPwdValue] = React.useState<string>("");
 
     const handleSubmit = async () => {
         try {
