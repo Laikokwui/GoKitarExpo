@@ -1,6 +1,6 @@
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { ChevronLeftIcon, Icon } from "@/components/ui/icon";
+import { ChevronLeftIcon, DownloadIcon, Icon } from "@/components/ui/icon";
 import { Pressable } from "@/components/ui/pressable";
 import { Text } from "@/components/ui/text";
 import { useAuth } from "@/context/authContext";
@@ -8,8 +8,10 @@ import { getPostById } from "@/database/postService";
 import { format, parseISO } from 'date-fns';
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Alert, Image, PermissionsAndroid, Platform, StyleSheet, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+
+const RNFS = require('react-native-fs');
 
 export default function PostDetailScreen() {
 	const router = useRouter();
@@ -20,6 +22,37 @@ export default function PostDetailScreen() {
 
 	const [post, setPost] = useState<any>({});
 	const [loading, setLoading] = useState<boolean>(true);
+
+	const downloadImage = async () => {
+		try {
+			// Get the actual base64 content
+			const base64Data = post?.image_uri?.replace(/^data:image\/jpeg;base64,/, '');
+		
+			// Request permission on Android
+			if (Platform.OS === 'android') {
+				const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,{
+					title: 'Storage Permission Required',
+					message: 'App needs access to your storage to save images.',
+					buttonPositive: 'OK',
+				});
+		
+				if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+					console.warn('Storage permission not granted');
+					return;
+				}
+			}
+		
+			const fileName = `image_${Date.now()}.jpg`;
+			const path = `${RNFS.PicturesDirectoryPath}/${fileName}`;
+		
+			await RNFS.writeFile(path, base64Data, 'base64');
+		
+			Alert.alert('Image saved');
+			return path;
+		} catch (error) {
+			Alert.alert('Error saving image:', JSON.stringify(error));
+		}
+	};
 
 	useEffect(() => {
 		getPostById(id)
@@ -54,10 +87,30 @@ export default function PostDetailScreen() {
 					<ThemedView style={styles.titleContainer}>
 						<ThemedText type="title">{post.title}</ThemedText>
 					</ThemedView>
-                    <Image
-                        source={{ uri: post.image_uri }}
-                        style={styles.image}
-                    />
+                   	{ post.image_uri !== "" ? 
+						<View style={{ position: "relative", marginBottom: 16, width: 200 }}>
+							<Image
+								source={{ uri: post.image_uri }}
+								style={styles.image}
+							/>
+							<Pressable
+								onPress={downloadImage}
+								style={{
+									position: "absolute",
+									top: -5,
+									right: -15,
+									backgroundColor: "lightgrey",
+									borderRadius: 10,
+									width: 26,
+									height: 26,
+									justifyContent: "center",
+									alignItems: "center",
+								}}
+							>
+								<Icon as={DownloadIcon} className="text-typography-500 m-2 w-10 h-10" />
+							</Pressable>
+						</View>:<></>
+					}
                     <Text style={{ marginTop: 16, fontSize: 16 }}>
                         {format(parseISO(post.created_at), 'd MMM yyyy h:mm a')}
                     </Text>
