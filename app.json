@@ -41,7 +41,8 @@
       "expo-sqlite",
       "@react-native-firebase/app",
       "@react-native-firebase/auth",
-      "expo-build-properties"
+      "expo-build-properties",
+      "react-native-permissions"
     ],
     "experiments": {
       "typedRoutes": true

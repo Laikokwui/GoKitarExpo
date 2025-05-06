@@ -31,6 +31,7 @@ export default function PostDetailScreen() {
 				console.error("Error fetching post:", error);
 			});
 	}, []);
+	
 	return (
 		<SafeAreaView style={styles.container}>
 			<View style={{ marginBottom: 16 }}>
