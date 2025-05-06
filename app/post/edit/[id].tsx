@@ -5,6 +5,7 @@ import { FormControl, FormControlError, FormControlErrorIcon, FormControlErrorTe
 import { ChevronLeftIcon, Icon } from "@/components/ui/icon";
 import { Input, InputField } from "@/components/ui/input";
 import { Pressable } from "@/components/ui/pressable";
+import { Textarea, TextareaInput } from '@/components/ui/textarea';
 import { useAuth } from "@/context/authContext";
 import { deletePost, getPostById, updatePost } from "@/database/postService";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -18,12 +19,18 @@ const RNFS = require('react-native-fs');
 
 export default function ModifyPostScreen() {
     const { id } = useLocalSearchParams();
+
     const [loading, setLoading] = useState<boolean>(true);
     const [postID, setPostID] = useState<number>(0);
     const [postTitle, setPostTitle] = useState<string>("");
     const [postContent, setPostContent] = useState<string>("");
     const [postImageUri, setPostImageUri] = useState<string>("");
     const [postImageData, setPostImageData] = useState<string>("");
+
+    const [isInvalidPostTitle, setIsInvalidPostTitle] = useState<boolean>(false);
+    const [postTitleErrorMsg, setPostTitleErrorMsg] = useState<string>("");
+    const [isInvalidPostContent, setIsInvalidPostContent] = useState<boolean>(false);
+    const [postContentErrorMsg, setPostContentErrorMsg] = useState<string>("");
 
     const { user }: any = useAuth();
 
@@ -50,7 +57,10 @@ export default function ModifyPostScreen() {
     
     const handleUpdatePost = () => {
         if (postTitle.trim() === "" || postContent.trim() === "") {
-            Alert.alert("Post title and content cannot be empty");
+            setIsInvalidPostTitle(true);
+            setPostTitleErrorMsg("Post title cannot be empty");
+            setIsInvalidPostContent(true);
+            setPostContentErrorMsg("Post content cannot be empty");
             return;
         }
         
@@ -144,7 +154,7 @@ export default function ModifyPostScreen() {
                         </Pressable>
                     )}
                     
-                    <FormControl className="mb-4">
+                    <FormControl className="mb-4" isInvalid={isInvalidPostTitle} isRequired>
                         <FormControlLabel>
                             <FormControlLabelText className="text-xl">Title</FormControlLabelText>
                         </FormControlLabel>
@@ -158,25 +168,24 @@ export default function ModifyPostScreen() {
                         </Input>
                         <FormControlError>
                             <FormControlErrorIcon />
-                            <FormControlErrorText>Please provide a post title</FormControlErrorText>
+                            <FormControlErrorText>{postTitleErrorMsg}</FormControlErrorText>
                         </FormControlError>
                     </FormControl>
 
-                    <FormControl className="mb-4">
+                    <FormControl className="mb-4"  isInvalid={isInvalidPostContent} isRequired>
                         <FormControlLabel>
                             <FormControlLabelText className="text-xl">Content</FormControlLabelText>
                         </FormControlLabel>
-                        <Input className="mt-1 h-12" size="md">
-                            <InputField
-                                type="text"
-                                placeholder="post content"
+                        <Textarea className="mt-1" size="lg">
+                            <TextareaInput 
+                                placeholder="post content..." 
                                 value={postContent}
                                 onChangeText={(text) => setPostContent(text)}
                             />
-                        </Input>
+                        </Textarea>
                         <FormControlError>
                             <FormControlErrorIcon />
-                            <FormControlErrorText>Please provide post content</FormControlErrorText>
+                            <FormControlErrorText>{postContentErrorMsg}</FormControlErrorText>
                         </FormControlError>
                     </FormControl>
 
