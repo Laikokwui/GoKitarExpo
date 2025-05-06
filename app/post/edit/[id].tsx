@@ -9,7 +9,7 @@ import { useAuth } from "@/context/authContext";
 import { deletePost, getPostById, updatePost } from "@/database/postService";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Alert, Image, ScrollView, StyleSheet, View } from "react-native";
+import { Alert, Image, KeyboardAvoidingView, ScrollView, StyleSheet, View } from "react-native";
 import { launchImageLibrary } from "react-native-image-picker";
 import { PERMISSIONS, request } from 'react-native-permissions';
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -86,115 +86,117 @@ export default function ModifyPostScreen() {
     }, []);
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
-            <ScrollView style={styles.container}>
-                <View style={{ marginBottom: 16 }}>
-                    <Pressable onPress={() => router.back()} className="pt-4">
-                        <Icon as={ChevronLeftIcon} size={"md"}  className="text-gray-900 dark:text-gray-50 w-10 h-10" />
-                    </Pressable>
-                </View>
-
-                <ThemedView style={styles.titleContainer}>
-                    <ThemedText type="title">Edit Post</ThemedText>
-                </ThemedView>
-
-                {postImageUri !== "" ? (
-                    <View style={{ position: "relative", marginBottom: 16, width: 200 }}>
-                        <Image
-                            source={{ uri: postImageUri }}
-                            style={styles.image}
-                            resizeMode="cover"
-                        />
-                        <Pressable
-                            onPress={() => {
-                                setPostImageUri("");
-                                setPostImageData("");
-                            }}
-                            style={{
-                                position: "absolute",
-                                top: -5,
-                                right: -15,
-                                backgroundColor: "lightgrey",
-                                borderRadius: 10,
-                                width: 26,
-                                height: 26,
-                                justifyContent: "center",
-                                alignItems: "center",
-                            }}
-                        >
-                            <ThemedText type="default" style={{ color: "grey", fontWeight: "bold" }}>X</ThemedText>
+        <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+            <SafeAreaView style={{ flex: 1 }}>
+                <ScrollView style={styles.container}>
+                    <View style={{ marginBottom: 16 }}>
+                        <Pressable onPress={() => router.back()} className="pt-4">
+                            <Icon as={ChevronLeftIcon} size={"md"}  className="text-gray-900 dark:text-gray-50 w-10 h-10" />
                         </Pressable>
                     </View>
-                ) : (
-                    <Pressable
-                        onPress={() => handleUploadImage()}
-                        className="bg-gray-200 rounded-lg p-4 mb-4"
-                        style={{
-                            borderWidth: 1,
-                            borderColor: "lightgrey",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            width: 200,
-                            height: 120,
-                            borderRadius: 8,
-                        }}
+
+                    <ThemedView style={styles.titleContainer}>
+                        <ThemedText type="title">Edit Post</ThemedText>
+                    </ThemedView>
+
+                    {postImageUri !== "" ? (
+                        <View style={{ position: "relative", marginBottom: 16, width: 200 }}>
+                            <Image
+                                source={{ uri: postImageUri }}
+                                style={styles.image}
+                                resizeMode="cover"
+                            />
+                            <Pressable
+                                onPress={() => {
+                                    setPostImageUri("");
+                                    setPostImageData("");
+                                }}
+                                style={{
+                                    position: "absolute",
+                                    top: -5,
+                                    right: -15,
+                                    backgroundColor: "lightgrey",
+                                    borderRadius: 10,
+                                    width: 26,
+                                    height: 26,
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                }}
+                            >
+                                <ThemedText type="default" style={{ color: "grey", fontWeight: "bold" }}>X</ThemedText>
+                            </Pressable>
+                        </View>
+                    ) : (
+                        <Pressable
+                            onPress={() => handleUploadImage()}
+                            className="bg-gray-200 rounded-lg p-4 mb-4"
+                            style={{
+                                borderWidth: 1,
+                                borderColor: "lightgrey",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                width: 200,
+                                height: 120,
+                                borderRadius: 8,
+                            }}
+                        >
+                            <ThemedText type="default" style={{color: "grey"}}>Upload post thumbnail</ThemedText>
+                        </Pressable>
+                    )}
+                    
+                    <FormControl className="mb-4">
+                        <FormControlLabel>
+                            <FormControlLabelText className="text-xl">Title</FormControlLabelText>
+                        </FormControlLabel>
+                        <Input className="mt-1 h-12" size="md">
+                            <InputField
+                                type="text"
+                                placeholder="post title"
+                                value={postTitle}
+                                onChangeText={(text) => setPostTitle(text)}
+                            />
+                        </Input>
+                        <FormControlError>
+                            <FormControlErrorIcon />
+                            <FormControlErrorText>Please provide a post title</FormControlErrorText>
+                        </FormControlError>
+                    </FormControl>
+
+                    <FormControl className="mb-4">
+                        <FormControlLabel>
+                            <FormControlLabelText className="text-xl">Content</FormControlLabelText>
+                        </FormControlLabel>
+                        <Input className="mt-1 h-12" size="md">
+                            <InputField
+                                type="text"
+                                placeholder="post content"
+                                value={postContent}
+                                onChangeText={(text) => setPostContent(text)}
+                            />
+                        </Input>
+                        <FormControlError>
+                            <FormControlErrorIcon />
+                            <FormControlErrorText>Please provide post content</FormControlErrorText>
+                        </FormControlError>
+                    </FormControl>
+
+                    <Button
+                        onPress={() => handleUpdatePost()}
+                        style={styles.listButton}
+                        variant="solid"
                     >
-                        <ThemedText type="default" style={{color: "grey"}}>Upload post thumbnail</ThemedText>
-                    </Pressable>
-                )}
-                
-                <FormControl className="mb-4">
-                    <FormControlLabel>
-                        <FormControlLabelText className="text-xl">Title</FormControlLabelText>
-                    </FormControlLabel>
-                    <Input className="mt-1 h-12" size="md">
-                        <InputField
-                            type="text"
-                            placeholder="post title"
-                            value={postTitle}
-                            onChangeText={(text) => setPostTitle(text)}
-                        />
-                    </Input>
-                    <FormControlError>
-                        <FormControlErrorIcon />
-                        <FormControlErrorText>Please provide a post title</FormControlErrorText>
-                    </FormControlError>
-                </FormControl>
-
-                <FormControl className="mb-4">
-                    <FormControlLabel>
-                        <FormControlLabelText className="text-xl">Content</FormControlLabelText>
-                    </FormControlLabel>
-                    <Input className="mt-1 h-12" size="md">
-                        <InputField
-                            type="text"
-                            placeholder="post content"
-                            value={postContent}
-                            onChangeText={(text) => setPostContent(text)}
-                        />
-                    </Input>
-                    <FormControlError>
-                        <FormControlErrorIcon />
-                        <FormControlErrorText>Please provide post content</FormControlErrorText>
-                    </FormControlError>
-                </FormControl>
-
-                <Button
-                    onPress={() => handleUpdatePost()}
-                    style={styles.listButton}
-                    variant="solid"
-                >
-                    <ButtonText style={styles.buttonText}>Update Post</ButtonText>
-                </Button>
-                <Button
-                    onPress={() => handleDeletePost()}
-                    style={styles.deleteButton}
-                    variant="solid"
-                >
-                    <ButtonText style={styles.buttonText}>Delete Post</ButtonText>
-                </Button>
-            </ScrollView>
-        </SafeAreaView>
+                        <ButtonText style={styles.buttonText}>Update Post</ButtonText>
+                    </Button>
+                    <Button
+                        onPress={() => handleDeletePost()}
+                        style={styles.deleteButton}
+                        variant="solid"
+                    >
+                        <ButtonText style={styles.buttonText}>Delete Post</ButtonText>
+                    </Button>
+                </ScrollView>
+            </SafeAreaView>
+        </KeyboardAvoidingView>
     );
 }
 

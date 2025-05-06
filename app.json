@@ -42,7 +42,13 @@
       "@react-native-firebase/app",
       "@react-native-firebase/auth",
       "expo-build-properties",
-      "react-native-permissions"
+      "react-native-permissions",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to upload picture."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
