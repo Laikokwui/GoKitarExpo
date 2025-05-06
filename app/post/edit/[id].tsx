@@ -1,15 +1,18 @@
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import { AlertDialog, AlertDialogBackdrop, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader } from "@/components/ui/alert-dialog";
 import { Button, ButtonText } from "@/components/ui/button";
 import { FormControl, FormControlError, FormControlErrorIcon, FormControlErrorText, FormControlLabel, FormControlLabelText } from "@/components/ui/form-control";
+import { Heading } from "@/components/ui/heading";
 import { ChevronLeftIcon, Icon } from "@/components/ui/icon";
 import { Input, InputField } from "@/components/ui/input";
 import { Pressable } from "@/components/ui/pressable";
+import { Text } from "@/components/ui/text";
 import { Textarea, TextareaInput } from '@/components/ui/textarea';
 import { useAuth } from "@/context/authContext";
 import { deletePost, getPostById, updatePost } from "@/database/postService";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Alert, Image, KeyboardAvoidingView, ScrollView, StyleSheet, View } from "react-native";
 import { launchImageLibrary } from "react-native-image-picker";
 import { PERMISSIONS, request } from 'react-native-permissions';
@@ -31,6 +34,9 @@ export default function ModifyPostScreen() {
     const [postTitleErrorMsg, setPostTitleErrorMsg] = useState<string>("");
     const [isInvalidPostContent, setIsInvalidPostContent] = useState<boolean>(false);
     const [postContentErrorMsg, setPostContentErrorMsg] = useState<string>("");
+
+    const [showAlertDialog, setShowAlertDialog] = React.useState<boolean>(false)
+    const handleClose = () => setShowAlertDialog(false);
 
     const { user }: any = useAuth();
 
@@ -197,13 +203,43 @@ export default function ModifyPostScreen() {
                         <ButtonText style={styles.buttonText}>Update Post</ButtonText>
                     </Button>
                     <Button
-                        onPress={() => handleDeletePost()}
+                        onPress={() => setShowAlertDialog(true)}
                         style={styles.deleteButton}
                         variant="solid"
                     >
                         <ButtonText style={styles.buttonText}>Delete Post</ButtonText>
                     </Button>
                 </ScrollView>
+                
+                <AlertDialog isOpen={showAlertDialog} onClose={handleClose} size="md">
+                    <AlertDialogBackdrop />
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <Heading className="text-typography-950 font-semibold" size="md">
+                                Are you sure you want to delete this post?
+                            </Heading>
+                        </AlertDialogHeader>
+                        <AlertDialogBody className="mt-3 mb-4">
+                            <Text size="sm">
+                                Deleting the post will remove it permanently and cannot be undone.
+                                Please confirm if you want to proceed.
+                            </Text>
+                        </AlertDialogBody>
+                        <AlertDialogFooter className="">
+                            <Button
+                                variant="outline"
+                                action="secondary"
+                                onPress={handleDeletePost}
+                                size="sm"
+                            >
+                                <ButtonText>Cancel</ButtonText>
+                            </Button>
+                            <Button size="sm" onPress={handleClose}>
+                                <ButtonText>Delete</ButtonText>
+                            </Button>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
             </SafeAreaView>
         </KeyboardAvoidingView>
     );
