@@ -8,7 +8,7 @@ import { useAuth } from "@/context/authContext"
 import auth from "@react-native-firebase/auth"
 import { Link, useRouter } from "expo-router"
 import React from "react"
-import { Pressable, ScrollView, View } from "react-native"
+import { Alert, Pressable, ScrollView, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 
 export default function LoginScreen() {
@@ -29,7 +29,7 @@ export default function LoginScreen() {
             }
         } catch (error: any) {
             console.log(error)
-            alert('Sign in failed: ' + error.message);
+            Alert.alert('Login in failed: ' + error.message);
             return;
         }
        

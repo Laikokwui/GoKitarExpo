@@ -1,6 +1,12 @@
 import openDB from "./db";
 
-// CREATE
+/**
+ * create post
+ * @param title 
+ * @param content 
+ * @param imageUri 
+ * @param userId 
+ */
 export const createPost = async (
 	title: string,
 	content: string,
@@ -15,21 +21,35 @@ export const createPost = async (
 	);
 };
 
-// READ ALL
+/**
+ * get list of posts
+ * @returns 
+ */
 export const getPosts = async () => {
 	const db = await openDB();
 	const posts = await db.getAllAsync("SELECT * FROM posts ORDER BY created_at DESC");
 	return posts;
 };
 
-// READ ALL
+/**
+ * get post by id
+ * @param id 
+ * @returns 
+ */
 export const getPostById = async (id: any) => {
 	const db = await openDB();
 	const post = await db.getFirstAsync("SELECT * FROM posts WHERE id = ?", [id]);
 	return post;
 };
 
-// UPDATE
+/**
+ * update post by id
+ * @param id 
+ * @param title 
+ * @param content 
+ * @param imageUri 
+ * @returns 
+ */
 export const updatePost = async (
 	id: number,
 	title: string,
@@ -45,7 +65,11 @@ export const updatePost = async (
 	});
 };
 
-// DELETE
+/**
+ * delete post by id
+ * @param id 
+ * @returns 
+ */
 export const deletePost = async (id: number) => {
 	const db = await openDB();
 	return new Promise(async (resolve, reject) => {

@@ -4,6 +4,7 @@ import { FormControl, FormControlError, FormControlErrorIcon, FormControlErrorTe
 import { Heading } from "@/components/ui/heading"
 import { ChevronLeftIcon, Icon } from "@/components/ui/icon"
 import { Input, InputField } from "@/components/ui/input"
+import { useAuth } from "@/context/authContext"
 import auth from "@react-native-firebase/auth"
 import { Link, useRouter } from "expo-router"
 import React from "react"
@@ -18,6 +19,8 @@ export default function SignupScreen() {
     const [pwdValue, setPwdValue] = React.useState("");
     const [cpwdValue, setCPwdValue] = React.useState("");
 
+    const { login } = useAuth();
+
     const handleSubmit = async () => {
         if (pwdValue !== cpwdValue) {
             Alert.alert('Passwords do not match');
@@ -26,11 +29,16 @@ export default function SignupScreen() {
 
         try {
             const user = await auth().createUserWithEmailAndPassword(emailValue, pwdValue);
-            if (user) router.replace('/home');
+            if (user) {
+                login(user)
+            };
         } catch (error: any) {
             console.log(error)
-            alert('Sign in failed: ' + error.message);
+            Alert.alert('Sign up failed: ' + error.message);
+            return;
         }
+
+        router.push('/home');
     }
 
     return (
