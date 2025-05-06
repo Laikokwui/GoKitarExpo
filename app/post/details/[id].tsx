@@ -5,6 +5,7 @@ import { Pressable } from "@/components/ui/pressable";
 import { Text } from "@/components/ui/text";
 import { useAuth } from "@/context/authContext";
 import { getPostById } from "@/database/postService";
+import { format, parseISO } from 'date-fns';
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
@@ -57,6 +58,9 @@ export default function PostDetailScreen() {
                         source={{ uri: post.image_uri }}
                         style={styles.image}
                     />
+                    <Text style={{ marginTop: 16, fontSize: 16 }}>
+                        {format(parseISO(post.created_at), 'd MMM yyyy h:mm a')}
+                    </Text>
                     <Text style={{ marginTop: 16, fontSize: 16 }}>
                         {post.content}
                     </Text>

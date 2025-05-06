@@ -1,10 +1,11 @@
 import { Text } from "@/components/ui/text";
+import { format, parseISO } from 'date-fns';
 import { useRouter } from "expo-router";
 import { Image, StyleSheet, View } from "react-native";
 import { Pressable } from "./ui/pressable";
 
 const postCard = (props: any) => {
-    const { postID, postTitle, postContent, postImageUri } = props;
+    const { postID, postTitle, postContent, postImageUri, postCreatedDate } = props;
 
     const router = useRouter();
     return (
@@ -22,6 +23,9 @@ const postCard = (props: any) => {
                 </Text>
                 <Text style={styles.content}>
                     {postContent}
+                </Text>
+                <Text style={styles.content}>
+                    {format(parseISO(postCreatedDate), 'd MMM yyyy h:mm a')}
                 </Text>
             </View>
         </Pressable>
