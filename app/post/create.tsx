@@ -8,11 +8,11 @@ import { Pressable } from "@/components/ui/pressable";
 import { Textarea, TextareaInput } from '@/components/ui/textarea';
 import { useAuth } from "@/context/authContext";
 import { createPost } from "@/database/postService";
+import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Alert, Image, KeyboardAvoidingView, ScrollView, StyleSheet, View } from "react-native";
 import { launchImageLibrary } from 'react-native-image-picker';
-import { PERMISSIONS, request } from "react-native-permissions";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const RNFS = require('react-native-fs');
@@ -49,29 +49,30 @@ export default function CreatePostScreen() {
         });
     };
 
-    const handleUploadImage = () => {
-        request(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE).then((result) => {
-            if (result === 'granted') {
-                launchImageLibrary({mediaType: 'photo'}, async (response) => {
-                    if (response.assets && response.assets.length > 0) {
-                        const image = response.assets[0];
-                        const filePath = image.uri?.replace('file://', '');
-                        const fileData = await RNFS.readFile(filePath, 'base64');
-                        setPostImageData(fileData);
-                        const imageUri = `data:image/jpeg;base64,${fileData}`;
-                        setPostImageUri(imageUri);
-                    }
-                });
-            } else {
-                Alert.alert('Permission denied', 'You need to grant permission to access the gallery.');
+    const handleUploadImage = async () => {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+        if (status !== 'granted') {
+            Alert.alert('Permission Denied', 'App needs media library permission to upload images.');
+            return false;
+        }
+
+        launchImageLibrary({mediaType: 'photo'}, async (response) => {
+            if (response.assets && response.assets.length > 0) {
+                const image = response.assets[0];
+                const filePath = image.uri?.replace('file://', '');
+                const fileData = await RNFS.readFile(filePath, 'base64');
+                setPostImageData(fileData);
+                const imageUri = `data:image/jpeg;base64,${fileData}`;
+                setPostImageUri(imageUri);
             }
         });
     }
 
     return (
-        <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
-            <SafeAreaView style={{ flex: 1 }}>
-                <ScrollView style={styles.container}>
+        <KeyboardAvoidingView style={styles.container} behavior="padding">
+            <SafeAreaView style={{flex:1}}>
+                <ScrollView>
                     <View style={{ marginBottom: 16 }}>
                         <Pressable onPress={() => router.push('/community')} className="pt-4">
                             <Icon as={ChevronLeftIcon} size={"md"}  className="text-gray-900 dark:text-gray-50 w-10 h-10" />
@@ -150,6 +151,10 @@ export default function CreatePostScreen() {
                         </FormControlLabel>
                         <Textarea className="mt-1" size="lg">
                             <TextareaInput 
+                                type="text"
+                                multiline
+                                numberOfLines={4}
+                                style={{ height: 100, textAlignVertical: 'top' }}
                                 placeholder="post content..." 
                                 value={postContent}
                                 onChangeText={(text) => setPostContent(text)}
@@ -177,6 +182,8 @@ export default function CreatePostScreen() {
 const styles = StyleSheet.create({
     container: {
         padding: 16,
+        flex: 1,
+        backgroundColor: '#ffffff',
     },
     titleContainer: {
         flexDirection: "row",

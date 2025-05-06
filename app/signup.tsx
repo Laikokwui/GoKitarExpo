@@ -80,7 +80,7 @@ export default function SignupScreen() {
     }
 
     return (
-        <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+        <KeyboardAvoidingView style={{ flex: 1, backgroundColor: "#fff" }} behavior="padding">
             <SafeAreaView className="flex-1 bg-white dark:bg-gray-900">
                 <View style={{ padding: 16 }}>
                     <Pressable onPress={() => router.push('/')} className="pt-4 items-start justify-start">
@@ -125,13 +125,7 @@ export default function SignupScreen() {
                             </Input>
                             <FormControlHelper>
                                 <FormControlHelperText>
-                                    <ul>
-                                        <li>6-16 characters</li>
-                                        <li>At least one special character ['!', '@', '#', '$', '%', '^', '&', '*']</li>
-                                        <li>One capital letter</li>
-                                        <li>One lowercase letter</li>
-                                        <li>One number</li>
-                                    </ul>
+                                    {`• 6-16 characters\n• At least 1 special character ['!', '@', '#', '$', '%', '^', '&', '*']\n• At least 1 capital letter\n• At least 1 lowercase letter\n• At least 1 number`}
                                 </FormControlHelperText>
                             </FormControlHelper>
                             <FormControlError>

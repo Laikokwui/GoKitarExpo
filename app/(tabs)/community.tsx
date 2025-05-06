@@ -13,7 +13,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function CommunityScreen() {
 	const router = useRouter();
 
-	const [posts, setPosts] = useState<any>([]);
+	const [posts, setPosts] = useState<any>(null);
 
 	useEffect(() => {
 		getPosts()

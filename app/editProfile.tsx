@@ -1,6 +1,6 @@
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallbackText, AvatarImage } from "@/components/ui/avatar";
 import { Box } from "@/components/ui/box";
 import { Button, ButtonText } from "@/components/ui/button";
 import { ChevronLeftIcon, Icon } from "@/components/ui/icon";
@@ -9,9 +9,7 @@ import { useAuth } from "@/context/authContext";
 import auth from "@react-native-firebase/auth";
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from "react";
-import { Alert, ScrollView, StyleSheet, TextInput, View } from "react-native";
-import { launchImageLibrary } from "react-native-image-picker";
-import { PERMISSIONS, request } from "react-native-permissions";
+import { ScrollView, StyleSheet, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const RNFS = require('react-native-fs');
@@ -19,11 +17,11 @@ const RNFS = require('react-native-fs');
 export default function EditProfileScreen() {
     const router = useRouter();
 
-    const [user, setUser] = useState<any>({});
     const [name, setName] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [imageUri, setImageUri] = useState<string>("");
-    const [imageData, setImageData] = useState<string>("");
+    // const [imageData, setImageData] = useState<string>("");
+    const { user }: any = useAuth();
 
     const { updateUser } = useAuth();
     
@@ -31,7 +29,7 @@ export default function EditProfileScreen() {
         try {
             const user = auth().currentUser;
             if (user) {
-                user.updateProfile({displayName: name, photoURL: imageUri}).then((user) => {updateUser(user);});
+                user.updateProfile({displayName: name}).then((user) => {updateUser(user);});
                 user.updateEmail(email);
                 
                 console.log("Profile updated successfully");
@@ -43,37 +41,52 @@ export default function EditProfileScreen() {
 
         router.replace('/account');
     };
+
+    // const uploadToCloudinary = async (base64Image:string) => {
+    //     const data = {
+    //       file: base64Image,
+    //       upload_preset: 'your_unsigned_preset', // Set this in your Cloudinary dashboard
+    //     };
+      
+    //     const res = await fetch('https://api.cloudinary.com/v1_1/your_cloud_name/image/upload', {
+    //         method: 'POST',
+    //         body: JSON.stringify(data),
+    //         headers: {
+    //             'content-type': 'application/json',
+    //         },
+    //     });
+      
+    //     const result = await res.json();
+    //     return result.secure_url; // This is the hosted image URL
+    // };
     
-    const handleUploadImage = () => {
-        request(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE).then((result) => {
-            if (result === 'granted') {
-                launchImageLibrary({mediaType: 'photo'}, async (response) => {
-                    if (response.assets && response.assets.length > 0) {
-                    const image = response.assets[0];
-                    const filePath = image.uri?.replace('file://', '');
-                    const fileData = await RNFS.readFile(filePath, 'base64');
-                    setImageData(fileData);
-                    const imageUri = `data:image/jpeg;base64,${fileData}`;
-                    setImageUri(imageUri);
-                    }
-                });
-            } else {
-                Alert.alert('Permission denied', 'You need to grant permission to access the gallery.');
-            }
-        });
-    }
+    // const handleUploadImage = async () => {
+    //     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+                
+    //     if (status !== 'granted') {
+    //         Alert.alert('Permission Denied', 'App needs media library permission to upload images.');
+    //         return false;
+    //     }
+        
+    //     launchImageLibrary({mediaType: 'photo'}, async (response) => {
+    //         if (response.assets && response.assets.length > 0) {
+    //             const image = response.assets[0];
+    //             const filePath = image.uri?.replace('file://', '');
+    //             const fileData = await RNFS.readFile(filePath, 'base64');
+    //             setImageData(fileData);
+    //             const cimageUri = `data:image/jpeg;base64,${fileData}`;
+
+    //             const cloudinaryUrl = await uploadToCloudinary(cimageUri);
+    //             setCloudinaryUrl(cloudinaryUrl);
+    //             setImageUri(cimageUri);
+    //         }
+    //     });
+    // }
 
     useEffect(() => {
-        const current_user: any = auth().currentUser || {};
-
-        if (current_user) {
-            setUser(current_user);
-            setName(current_user?.displayName || "");
-            setEmail(current_user?.email || "");
-            setImageUri(current_user?.photoURL || "");
-        } else {
-            router.replace('/');
-        }
+        setName(user?.displayName || "");
+        setEmail(user?.email || "");
+        setImageUri(user?.photoURL || "");
     }, []);
 
     return (
@@ -90,15 +103,13 @@ export default function EditProfileScreen() {
                 <Box style={styles.profileCardContainer}>
                     <View style={{marginBottom: 16}}>
 						<Avatar size="lg" style={{ marginRight: 16 }}>
+                            <AvatarFallbackText>{user?.displayName}</AvatarFallbackText>
 							<AvatarImage
 								source={{
-									uri: user?.imageUri || "https://www.inforwaves.com/media/2021/04/dummy-profile-pic-300x300-1.png",
+									uri: imageUri,
 								}}
 							/>
 						</Avatar>
-                        <Pressable onPress={() => handleUploadImage()}>
-                            <ThemedText type="link">Change Profile Picture</ThemedText>
-                        </Pressable>
 					</View>
 					<View>
                         <View style={styles.profileRowContainer}>

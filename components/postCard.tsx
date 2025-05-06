@@ -5,7 +5,7 @@ import { Image, StyleSheet, View } from "react-native";
 import { Pressable } from "./ui/pressable";
 
 const postCard = (props: any) => {
-    const { postID, postTitle, postContent, postImageUri, postCreatedDate } = props;
+    const { postID, postTitle, postContent, postImageUri, postCreationDate } = props;
 
     const router = useRouter();
     return (
@@ -24,8 +24,8 @@ const postCard = (props: any) => {
                 <Text style={styles.content}>
                     {postContent}
                 </Text>
-                <Text style={styles.content}>
-                    {format(parseISO(postCreatedDate), 'd MMM yyyy h:mm a')}
+                <Text style={styles.date}>
+                    Date uploaded: {postCreationDate !== undefined ? format(parseISO(postCreationDate), 'd MMM yyyy h:mm a'): '-'}
                 </Text>
             </View>
         </Pressable>
@@ -65,9 +65,17 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     content: {
-        fontSize: 14,
-        color: '#555',
+        marginTop: 6,
+        fontSize: 16,
+        color: '#444',
         lineHeight: 20,
+        textAlign: 'left',
+    },
+    date: {
+        marginTop: 10,
+        fontSize: 12,
+        color: '#777',
+        lineHeight: 15,
         textAlign: 'left',
     },
     title: {

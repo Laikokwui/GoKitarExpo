@@ -58,7 +58,7 @@ export default function LoginScreen() {
     }
 
     return (
-        <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+        <KeyboardAvoidingView style={{ flex: 1 , backgroundColor: "#fff"}} behavior="padding">
             <SafeAreaView className="flex-1 bg-white dark:bg-gray-900">
                 <View style={{ padding: 16 }}>
                     <Pressable onPress={() => router.push('/')} className="pt-4 items-start justify-start">

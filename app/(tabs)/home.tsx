@@ -18,10 +18,11 @@ export default function HomeScreen() {
 
 	useEffect(() => {
 		getPosts()
-			.then((posts) => {
+			.then((postsList) => {
 				setPosts(
-					posts.filter((post: any) => post.userId === user?.uid)
+					postsList.filter((post: any) => post.userid === user?.uid)
 				);
+				console.log(postsList.filter((post: any) => post.userid === user?.uid));
 			})
 			.catch((error) => {
 				console.error("Error fetching posts:", error);

@@ -6,9 +6,11 @@ import { Text } from "@/components/ui/text";
 import { useAuth } from "@/context/authContext";
 import { getPostById } from "@/database/postService";
 import { format, parseISO } from 'date-fns';
+import * as FileSystem from 'expo-file-system';
+import * as MediaLibrary from 'expo-media-library';
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Alert, Image, PermissionsAndroid, Platform, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Alert, Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const RNFS = require('react-native-fs');
@@ -25,30 +27,30 @@ export default function PostDetailScreen() {
 
 	const downloadImage = async () => {
 		try {
+            // Request permission on Android
+			const { status } = await MediaLibrary.requestPermissionsAsync();
+            if (status !== 'granted') {
+                Alert.alert('Permission Denied', 'App needs access to media library.');
+                return false;
+            }
+
 			// Get the actual base64 content
 			const base64Data = post?.image_uri?.replace(/^data:image\/jpeg;base64,/, '');
-		
-			// Request permission on Android
-			if (Platform.OS === 'android') {
-				const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,{
-					title: 'Storage Permission Required',
-					message: 'App needs access to your storage to save images.',
-					buttonPositive: 'OK',
-				});
-		
-				if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
-					console.warn('Storage permission not granted');
-					return;
-				}
-			}
-		
-			const fileName = `image_${Date.now()}.jpg`;
-			const path = `${RNFS.PicturesDirectoryPath}/${fileName}`;
-		
-			await RNFS.writeFile(path, base64Data, 'base64');
+            const fileName = `image_${Date.now()}.jpg`;
+            const fileUri = `${FileSystem.cacheDirectory}${fileName}`;
+
+            // 3. Write the base64 image to a file
+            await FileSystem.writeAsStringAsync(fileUri, base64Data, {
+            encoding: FileSystem.EncodingType.Base64,
+            });
+
+            // 4. Save the file to media library (gallery)
+            const asset = await MediaLibrary.createAssetAsync(fileUri);
+            await MediaLibrary.createAlbumAsync('Download', asset, false);
+
 		
 			Alert.alert('Image saved');
-			return path;
+            return;
 		} catch (error) {
 			Alert.alert('Error saving image:', JSON.stringify(error));
 		}
@@ -70,7 +72,7 @@ export default function PostDetailScreen() {
 		<SafeAreaView style={styles.container}>
 			<View style={{ marginBottom: 16 }}>
 				<Pressable
-					onPress={() => router.push("/community")}
+					onPress={() => router.back()}
 					className="pt-4"
 				>
 					<Icon
@@ -100,14 +102,14 @@ export default function PostDetailScreen() {
 									top: -5,
 									right: -15,
 									backgroundColor: "lightgrey",
-									borderRadius: 10,
-									width: 26,
-									height: 26,
+									borderRadius: 8,
+									width: 40,
+									height: 40,
 									justifyContent: "center",
 									alignItems: "center",
 								}}
 							>
-								<Icon as={DownloadIcon} className="text-typography-500 m-2 w-10 h-10" />
+								<Icon as={DownloadIcon} className="text-typography-500 m-2 w-8 h-8 " />
 							</Pressable>
 						</View>:<></>
 					}
@@ -118,7 +120,7 @@ export default function PostDetailScreen() {
                         {post.content}
                     </Text>
 					{post.userid === user?.uid ? (
-						<TouchableOpacity style={styles.editButton}>
+						<TouchableOpacity style={styles.editButton} onPress={() => router.push({ pathname: '/post/edit/[id]', params:{ id: post.id }})}>
 							<Text style={styles.editButtonText}>Edit</Text>
 						</TouchableOpacity>
 					) : (
@@ -132,6 +134,8 @@ export default function PostDetailScreen() {
 const styles = StyleSheet.create({
 	container: {
 		padding: 16,
+        backgroundColor: '#fff',
+        flex: 1
 	},
 	titleContainer: {
 		flexDirection: "row",

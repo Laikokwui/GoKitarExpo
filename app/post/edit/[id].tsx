@@ -11,11 +11,11 @@ import { Text } from "@/components/ui/text";
 import { Textarea, TextareaInput } from '@/components/ui/textarea';
 import { useAuth } from "@/context/authContext";
 import { deletePost, getPostById, updatePost } from "@/database/postService";
+import * as ImagePicker from 'expo-image-picker';
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Alert, Image, KeyboardAvoidingView, ScrollView, StyleSheet, View } from "react-native";
 import { launchImageLibrary } from "react-native-image-picker";
-import { PERMISSIONS, request } from 'react-native-permissions';
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const RNFS = require('react-native-fs');
@@ -42,21 +42,22 @@ export default function ModifyPostScreen() {
 
     const router = useRouter();
 
-    const handleUploadImage = () => {
-        request(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE).then((result) => {
-            if (result === 'granted') {
-                launchImageLibrary({mediaType: 'photo'}, async (response) => {
-                    if (response.assets && response.assets.length > 0) {
-                    const image = response.assets[0];
-                    const filePath = image.uri?.replace('file://', '');
-                    const fileData = await RNFS.readFile(filePath, 'base64');
-                    setPostImageData(fileData);
-                    const imageUri = `data:image/jpeg;base64,${fileData}`;
-                    setPostImageUri(imageUri);
-                    }
-                });
-            } else {
-                Alert.alert('Permission denied', 'You need to grant permission to access the gallery.');
+    const handleUploadImage = async () => {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        
+        if (status !== 'granted') {
+            Alert.alert('Permission Denied', 'App needs media library permission to upload images.');
+            return false;
+        }
+        
+        launchImageLibrary({mediaType: 'photo'}, async (response) => {
+            if (response.assets && response.assets.length > 0) {
+            const image = response.assets[0];
+            const filePath = image.uri?.replace('file://', '');
+            const fileData = await RNFS.readFile(filePath, 'base64');
+            setPostImageData(fileData);
+            const imageUri = `data:image/jpeg;base64,${fileData}`;
+            setPostImageUri(imageUri);
             }
         });
     }
@@ -70,16 +71,18 @@ export default function ModifyPostScreen() {
             return;
         }
         
-        updatePost(postID, postTitle, postContent, "").then(() => {
-            console.log("Post created successfully");
+        updatePost(postID, postTitle, postContent, postImageUri).then(() => {
+            console.log("Post updated successfully");
+            router.replace('/community');
         }).catch((error) => {
-            console.error("Error creating post:", error);
+            console.error("Error updating post:", error);
         });
     };
 
     const handleDeletePost = () => {
         deletePost(postID).then(() => {
             console.log("Post deleted successfully");
+            router.replace('/community');
         }
         ).catch((error) => {
             console.error("Error deleting post:", error);
@@ -102,8 +105,8 @@ export default function ModifyPostScreen() {
     }, []);
 
     return (
-        <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
-            <SafeAreaView style={{ flex: 1 }}>
+        <KeyboardAvoidingView style={styles.container} behavior="padding">
+            <SafeAreaView style={{flex: 1}}>
                 <ScrollView style={styles.container}>
                     <View style={{ marginBottom: 16 }}>
                         <Pressable onPress={() => router.back()} className="pt-4">
@@ -184,6 +187,10 @@ export default function ModifyPostScreen() {
                         </FormControlLabel>
                         <Textarea className="mt-1" size="lg">
                             <TextareaInput 
+                                type="text"
+                                multiline
+                                numberOfLines={4}
+                                style={{ height: 100, textAlignVertical: 'top' }}
                                 placeholder="post content..." 
                                 value={postContent}
                                 onChangeText={(text) => setPostContent(text)}
@@ -229,12 +236,12 @@ export default function ModifyPostScreen() {
                             <Button
                                 variant="outline"
                                 action="secondary"
-                                onPress={handleDeletePost}
+                                onPress={handleClose}
                                 size="sm"
                             >
                                 <ButtonText>Cancel</ButtonText>
                             </Button>
-                            <Button size="sm" onPress={handleClose}>
+                            <Button size="sm" onPress={handleDeletePost}>
                                 <ButtonText>Delete</ButtonText>
                             </Button>
                         </AlertDialogFooter>
@@ -248,6 +255,8 @@ export default function ModifyPostScreen() {
 const styles = StyleSheet.create({
     container: {
         padding: 16,
+        flex: 1,
+        backgroundColor: '#ffffff',
     },
     titleContainer: {
         flexDirection: "row",

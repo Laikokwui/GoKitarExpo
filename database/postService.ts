@@ -57,12 +57,10 @@ export const updatePost = async (
 	imageUri: string
 ) => {
 	const db = await openDB();
-	return new Promise(async (resolve, reject) => {
-		await db.runAsync(
-			"UPDATE posts SET title = ?, content = ?, image_uri = ? WHERE id = ?",
-			[title, content, imageUri, id]
-		);
-	});
+	await db.runAsync(
+		"UPDATE posts SET title = ?, content = ?, image_uri = ? WHERE id = ?",
+		[title, content, imageUri, id]
+	);
 };
 
 /**
@@ -72,7 +70,5 @@ export const updatePost = async (
  */
 export const deletePost = async (id: number) => {
 	const db = await openDB();
-	return new Promise(async (resolve, reject) => {
-		await db.runAsync("DELETE FROM posts WHERE id = ?", [id]);
-	});
+	await db.runAsync("DELETE FROM posts WHERE id = ?", [id]);
 };

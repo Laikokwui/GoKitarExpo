@@ -2,7 +2,7 @@ import { ScrollView, StyleSheet, View } from "react-native";
 
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallbackText, AvatarImage } from "@/components/ui/avatar";
 import { Box } from "@/components/ui/box";
 import { Pressable } from "@/components/ui/pressable";
 import { SkeletonText } from "@/components/ui/skeleton";
@@ -51,9 +51,10 @@ export default function AccountScreen() {
 				<Box style={styles.profileCardContainer}>
 					<View>
 						<Avatar size="lg" style={{ marginRight: 16 }}>
+							<AvatarFallbackText>{user?.displayName||""}</AvatarFallbackText>
 							<AvatarImage
 								source={{
-									uri: user?.imageUri || "https://www.inforwaves.com/media/2021/04/dummy-profile-pic-300x300-1.png",
+									uri: user?.imageUri,
 								}}
 							/>
 						</Avatar>
